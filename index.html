@@ -1,16 +1,96 @@
-<div class="card-header" onclick="toggleCard(this)"><span id="h2">02. ألعابي ومجتمعي</span> <span>+</span></div>
-            <div class="card-content">
-                <a href="https://olkie-1.itch.io/" target="_blank" class="btn-link" id="b1">🎮 ألعابي على Itch.io</a>
-                <a href="https://discord.com/channels/1252787684947005552/1253135065865519135" target="_blank" class="btn-link" id="b2">💬 مجتمع الديسكورد</a>
-                <a href="https://youtube.com/@_olkie?si=kEObA2_kbXdKUb6t" target="_blank" class="btn-link" id="b3">🎥 قناة اليوتيوب</a>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عالم أولكي | Olkie World</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-orange: #ff8c00;
+            --dark-bg: #000000;
+            --morning-bg: #2196f3;
+            --glass: rgba(255, 140, 0, 0.1);
+        }
+
+        * { box-sizing: border-box; transition: all 0.3s ease; }
+        body, html { margin: 0; padding: 0; font-family: 'Cairo', sans-serif; overflow-x: hidden; min-height: 100vh; }
+        
+        /* التحكم بالوضع (ليلي/صبحي) */
+        body.night { background: var(--dark-bg); color: white; }
+        body.morning { background: var(--morning-bg); color: white; }
+
+        #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.25; }
+
+        /* شاشة الترحيب */
+        #welcome-screen {
+            position: fixed; width: 100%; height: 100vh; background: inherit;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .profile-img {
+            width: 150px; height: 150px; border-radius: 50%;
+            border: 3px solid var(--neon-orange); box-shadow: 0 0 20px var(--neon-orange);
+            margin-bottom: 20px; object-fit: cover;
+        }
+        
+        /* المحتوى الرئيسي */
+        .main-container { max-width: 800px; margin: 40px auto; padding: 20px; display: none; opacity: 0; }
+        .card {
+            background: rgba(0, 0, 0, 0.6); border-bottom: 2px solid var(--neon-orange);
+            margin-bottom: 15px; border-radius: 10px; backdrop-filter: blur(10px);
+        }
+        .card-header { padding: 20px; cursor: pointer; display: flex; justify-content: space-between; color: var(--neon-orange); font-weight: 700; }
+        .card-content { max-height: 0; padding: 0 20px; overflow: hidden; color: #eee; }
+        .card.active .card-content { max-height: 500px; padding: 20px; }
+
+        /* أزرار التحكم (لغة ووضع) */
+        .controls { position: fixed; bottom: 20px; left: 20px; right: 20px; display: flex; justify-content: space-between; z-index: 100; }
+        select, .control-btn { 
+            padding: 10px; border-radius: 8px; border: 1px solid var(--neon-orange); 
+            background: rgba(0,0,0,0.8); color: white; cursor: pointer; font-family: 'Cairo';
+        }
+
+        .btn-link {
+            display: inline-block; padding: 8px 15px; background: var(--glass);
+            border: 1px solid var(--neon-orange); color: white; text-decoration: none;
+            margin: 5px; border-radius: 5px; font-size: 0.9rem;
+        }
+        .fade-in { animation: fadeIn 0.8s forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="night">
+
+    <canvas id="matrix-canvas"></canvas>
+
+    <div id="welcome-screen">
+        <img src="olkie.jpg" class="profile-img" alt="Olkie" onerror="this.src='https://ui-avatars.com/api/?name=Olkie&background=ff8c00&color=fff'">
+        <div class="welcome-text" id="welcomeText" style="font-size: 1.8rem; margin-bottom: 20px;">أهلاً في عالم أولكي</div>
+        <button class="control-btn" id="enterBtn" onclick="openWorld()" style="padding: 10px 40px;">دخول</button>
+    </div>
+
+    <div class="main-container" id="main-content">
+        <h1 id="modeStatus" style="text-align: center; color: var(--neon-orange);">الوضع الليلي</h1>
+        
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)"><span id="h1">01. مَن أنا؟</span> <span>+</span></div>
+            <div class="card-content" id="c1">اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها.</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)"><span id="h2">02. ألعابي ومجتمعي</span> <span>+</span></div>
+<div class="card-content">
+                <a href="#" class="btn-link" id="b1">🎮 ألعابي على Itch.io</a>
+                <a href="#" class="btn-link" id="b2">💬 مجتمع الديسكورد</a>
+                <a href="#" class="btn-link" id="b3">🎥 قناة اليوتيوب</a>
             </div>
         </div>
 
         <div class="card">
             <div class="card-header" onclick="toggleCard(this)"><span id="h3">03. الحسابات</span> <span>+</span></div>
             <div class="card-content">
-                <a href="https://discord.com/channels/@me/1480955456280334447" target="_blank" class="btn-link">Discord Account</a>
-                <a href="https://www.linkedin.com/in/olkie" target="_blank" class="btn-link">LinkedIn Profile</a>
+                <a href="#" class="btn-link">Discord Account</a>
+                <a href="#" class="btn-link">LinkedIn Profile</a>
             </div>
         </div>
     </div>
@@ -24,6 +104,7 @@
     </div>
 
     <script>
+        // 1. نظام الترجمة
         const translations = {
             ar: {
                 welcome: "أهلاً في عالم أولكي", enter: "دخول",
@@ -55,6 +136,7 @@
             updateModeText();
         }
 
+        // 2. نظام الأوضاع (ليلي/صبحي)
         function toggleMode() {
             document.body.classList.toggle('morning');
             document.body.classList.toggle('night');
@@ -67,6 +149,7 @@
             document.getElementById('modeStatus').innerText = isNight ? translations[lang].modeN : translations[lang].modeM;
         }
 
+        // 3. وظائف الواجهة الأصلية
         function openWorld() {
             document.getElementById('welcome-screen').style.display = 'none';
             const content = document.getElementById('main-content');
@@ -75,91 +158,15 @@
         }
 
         function toggleCard(header) {
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عالم أولكي | Olkie World</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --neon-orange: #ff8c00;
-            --dark-bg: #000000;
-            --morning-bg: #2196f3;
-            --glass: rgba(255, 140, 0, 0.1);
-        }
-
-        * { box-sizing: border-box; transition: all 0.3s ease; }
-        body, html { margin: 0; padding: 0; font-family: 'Cairo', sans-serif; overflow-x: hidden; min-height: 100vh; }
-        
-        body.night { background: var(--dark-bg); color: white; }
-        body.morning { background: var(--morning-bg); color: white; }
-
-        #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.25; }
-
-        #welcome-screen {
-            position: fixed; width: 100%; height: 100vh; background: inherit;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000;
-        }
-        .profile-img {
-            width: 150px; height: 150px; border-radius: 50%;
-            border: 3px solid var(--neon-orange); box-shadow: 0 0 20px var(--neon-orange);
-            margin-bottom: 20px; object-fit: cover;
-        }
-        
-        .main-container { max-width: 800px; margin: 40px auto; padding: 20px; display: none; opacity: 0; }
-        .card {
-            background: rgba(0, 0, 0, 0.6); border-bottom: 2px solid var(--neon-orange);
-            margin-bottom: 15px; border-radius: 10px; backdrop-filter: blur(10px);
-        }
-        .card-header { padding: 20px; cursor: pointer; display: flex; justify-content: space-between; color: var(--neon-orange); font-weight: 700; }
-        .card-content { max-height: 0; padding: 0 20px; overflow: hidden; color: #eee; line-height: 1.8; }
-        .card.active .card-content { max-height: 500px; padding: 20px; }
-
-        .controls { position: fixed; bottom: 20px; left: 20px; right: 20px; display: flex; justify-content: space-between; z-index: 100; gap: 10px; }
-        select, .control-btn { 
-            padding: 10px; border-radius: 8px; border: 1px solid var(--neon-orange); 
-            background: rgba(0,0,0,0.8); color: white; cursor: pointer; font-family: 'Cairo'; flex: 1;
-        }
-
-        .btn-link {
-            display: inline-block; padding: 10px 18px; background: var(--glass);
-            border: 1px solid var(--neon-orange); color: white; text-decoration: none;
-            margin: 5px; border-radius: 5px; font-size: 0.9rem; font-weight: bold;
-        }
-        .btn-link:hover { background: var(--neon-orange); color: black; box-shadow: 0 0 15px var(--neon-orange); }
-
-        .fade-in { animation: fadeIn 0.8s forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
-</head>
-<body class="night">
-
-    <canvas id="matrix-canvas"></canvas>
-
-    <div id="welcome-screen">
-        <img src="olkie.jpg" class="profile-img" alt="Olkie" onerror="this.src='https://ui-avatars.com/api/?name=Olkie&background=ff8c00&color=fff'">
-        <div class="welcome-text" id="welcomeText" style="font-size: 1.8rem; margin-bottom: 20px;">أهلاً في عالم أولكي</div>
-        <button class="control-btn" id="enterBtn" onclick="openWorld()" style="padding: 10px 40px;">دخول</button>
-    </div>
-
-    <div class="main-container" id="main-content">
-        <h1 id="modeStatus" style="text-align: center; color: var(--neon-orange);">الوضع الليلي</h1>
-        
-        <div class="card">
-            <div class="card-header" onclick="toggleCard(this)"><span id="h1">01. مَن أنا؟</span> <span>+</span></div>
-            <div class="card-content" id="c1">اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!</div>
-        </div>
-
-        <div class="card">
-const card = header.parentElement;
+            const card = header.parentElement;
             card.classList.toggle('active');
             header.querySelectorAll('span')[1].innerText = card.classList.contains('active') ? '-' : '+';
         }
 
+        // 4. كود الماتريكس الأصلي
         const canvas = document.getElementById('matrix-canvas');
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.
+getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const chars = "OLKIE01"; const fontSize = 16;
         const columns = canvas.width / fontSize;
@@ -176,7 +183,6 @@ const card = header.parentElement;
             }
         }
         setInterval(draw, 35);
-        window.onresize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
     </script>
 </body>
 </html>
