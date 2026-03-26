@@ -207,7 +207,28 @@
   </script>
 
 </body>
-</html>
+</html><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع أولكي - Olkie Website</title>
+    <style>
+        /* تنسيقات مستوحاة من صور موقعك */
+        body { font-family: 'Arial', sans-serif; background-color: #1a73e8; margin: 0; padding: 20px; transition: 0.3s; color: white; }
+        .container { max-width: 500px; margin: auto; }
+        .card { background-color: #0d1b2a; padding: 20px; border-radius: 15px; border-left: 5px solid orange; margin-bottom: 20px; }
+        h2 { color: orange; margin-top: 0; }
+        .btn-group { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        button, a.btn-link { 
+            background: #1b263b; color: white; border: 1px solid orange; 
+            padding: 10px 15px; border-radius: 8px; cursor: pointer; text-decoration: none; font-size: 14px;
+        }
+        select { width: 100%; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
 <div class="container">
     <select id="langSelector" onchange="changeLanguage(this.value)">
         <option value="ar">العربية 🇸🇦</option>
@@ -215,74 +236,81 @@
     </select>
 
     <div class="card">
-        <h2 id="title-1">01. مَن أنا؟</h2>
-        <p id="desc-1">اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!</p>
+        <h2 id="t1">01. مَن أنا؟</h2>
+        <p id="d1">اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!</p>
     </div>
 
     <div class="card">
-        <h2 id="title-2">02. ألعابي ومجتمعي</h2>
-        <div class="buttons">
-            <button id="btn-itch">🎮 ألعابي على Itch.io</button>
-            <button id="btn-discord">💬 مجتمع الديسكورد</button>
-            <button id="btn-youtube">🎥 قناة اليوتيوب</button>
+        <h2 id="t2">02. ألعابي ومجتمعي</h2>
+        <div class="btn-group">
+            <a href="#" class="btn-link" id="b1">🎮 ألعابي على Itch.io</a>
+            <a href="#" class="btn-link" id="b2">💬 مجتمع الديسكورد</a>
+            <a href="#" class="btn-link" id="b3">🎥 قناة اليوتيوب</a>
         </div>
     </div>
 
     <div class="card">
-        <h2 id="title-3">03. الحسابات</h2>
-        <button id="btn-acc-discord">Discord Account</button>
-        <button id="btn-acc-link">LinkedIn Profile</button>
+        <h2 id="t3">03. الحسابات</h2>
+        <div class="btn-group">
+            <a href="#" class="btn-link">Discord Account</a>
+            <a href="#" class="btn-link">LinkedIn Profile</a>
+        </div>
     </div>
 </div>
+
 <script>
-const translations = {
-    ar: {
-        title1: "01. مَن أنا؟",
-        desc1: "اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!",
-        title2: "02. ألعابي ومجتمعي",
-        btnItch: "🎮 ألعابي على Itch.io",
-        btnDiscord: "💬 مجتمع الديسكورد",
-        btnYoutube: "🎥 قناة اليوتيوب",
-        title3: "03. الحسابات",
-        dir: "rtl"
-    },
-    en: {
-        title1: "01. Who am I?",
-        desc1: "My name is Olkie, a programmer and designer. I have some game projects that I programmed. I hope you enjoy trying my games!",
-        title2: "02. My Games & Community",
-        btnItch: "🎮 My Games on Itch.io",
-        btnDiscord: "💬 Discord Community",
-        btnYoutube: "🎥 YouTube Channel",
-        title3: "03. Accounts",
-        dir: "ltr"
+    // قاموس الترجمة (عربي وانجليزي فقط)
+    const translations = {
+        ar: {
+            t1: "01. مَن أنا؟",
+            d1: "اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!",
+            t2: "02. ألعابي ومجتمعي",
+            b1: "🎮 ألعابي على Itch.io",
+            b2: "💬 مجتمع الديسكورد",
+            b3: "🎥 قناة اليوتيوب",
+            t3: "03. الحسابات",
+            dir: "rtl"
+        },
+        en: {
+            t1: "01. Who am I?",
+            d1: "My name is Olkie, a programmer and designer. I have some game projects that I programmed. I hope you enjoy trying my games!",
+            t2: "02. My Games & Community",
+            b1: "🎮 My Games on Itch.io",
+            b2: "💬 Discord Community",
+            b3: "🎥 YouTube Channel",
+            t3: "03. Accounts",
+            dir: "ltr"
+        }
+    };
+
+    function changeLanguage(lang) {
+        const data = translations[lang];
+
+        // تحديث النصوص والعناوين
+        document.getElementById('t1').innerText = data.t1;
+        document.getElementById('d1').innerText = data.d1;
+        document.getElementById('t2').innerText = data.t2;
+        document.getElementById('t3').innerText = data.t3;
+
+        // تحديث أزرار الروابط
+        document.getElementById('b1').innerText = data.b1;
+        document.getElementById('b2').innerText = data.b2;
+        document.getElementById('b3').innerText = data.b3;
+
+        // تغيير اتجاه الصفحة (يمين لليسار وبالعكس)
+        document.documentElement.dir = data.dir;
+        
+        // حفظ اللغة في المتصفح
+        localStorage.setItem('userLang', lang);
     }
-};
 
-function changeLanguage(lang) {
-    const data = translations[lang];
-
-    // ترجمة العناوين والنصوص
-    document.getElementById('title-1').innerText = data.title1;
-    document.getElementById('desc-1').innerText = data.desc1;
-    document.getElementById('title-2').innerText = data.title2;
-    document.getElementById('title-3').innerText = data.title3;
-
-    // ترجمة الأزرار
-    document.getElementById('btn-itch').innerText = data.btnItch;
-    document.getElementById('btn-discord').innerText = data.btnDiscord;
-    document.getElementById('btn-youtube').innerText = data.btnYoutube;
-
-    // تغيير اتجاه الصفحة بالكامل
-    document.documentElement.dir = data.dir;
-    
-    // حفظ اللغة المختارة في المتصفح
-    localStorage.setItem('userLang', lang);
-}
-
-// تشغيل اللغة المحفوظة عند فتح الموقع
-window.onload = () => {
-    const saved = localStorage.getItem('userLang') || 'ar';
-    document.getElementById('langSelector').value = saved;
-    changeLanguage(saved);
-};
+    // تشغيل اللغة المحفوظة عند فتح الصفحة
+    window.onload = () => {
+        const saved = localStorage.getItem('userLang') || 'ar';
+        document.getElementById('langSelector').value = saved;
+        changeLanguage(saved);
+    };
 </script>
+
+</body>
+</html> 
