@@ -208,3 +208,97 @@
 
 </body>
 </html>
+<!DOCTYPE>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>موقع مع ترجمة</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0a0a0a;
+      color: white;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #4da6ff;
+    }
+
+    p {
+      font-size: 20px;
+      margin-top: 20px;
+    }
+
+    .translate-box {
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* تحسين شكل أداة الترجمة */
+    #google_translate_element {
+      background: #111;
+      padding: 10px 15px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(77, 166, 255, 0.4);
+    }
+
+    .goog-te-gadget {
+      color: white !important;
+      font-size: 0 !important;
+    }
+
+    .goog-te-gadget .goog-te-combo {
+      background: #1e3a8a;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* إخفاء شريط Google العلوي */
+    .goog-te-banner-frame.skiptranslate {
+      display: none !important;
+    }
+
+    body {
+      top: 0px !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- مكان زر/قائمة اللغات -->
+  <div class="translate-box">
+    <div id="google_translate_element"></div>
+  </div>
+
+  <!-- محتوى الموقع -->
+  <h1>أهلاً بك في موقعي</h1>
+  <p>هذا مثال على موقع يترجم النصوص من العربي إلى الإنجليزي والإسباني والبرتغالي.</p>
+  <p>اختر اللغة من القائمة بالأعلى وسيتم ترجمة الموقع تلقائياً.</p>
+
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'ar',
+        includedLanguages: 'en,es,pt',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+
+  <script type="text/javascript"
+    src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+  </script>
+
+</body>
+</html>
