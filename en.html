@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Olkie - English</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: white;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .avatar {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: 5px solid orange;
+      object-fit: cover;
+      box-shadow: 0 0 35px rgba(255, 140, 0, 0.9);
+      margin-bottom: 30px;
+    }
+
+    .title {
+      font-size: 48px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 0 0 18px rgba(255, 140, 0, 0.8);
+      margin-bottom: 60px;
+      line-height: 1.3;
+    }
+
+    .lang-btn {
+      width: 80%;
+      max-width: 320px;
+      padding: 18px;
+      margin: 0 auto 20px auto;
+      display: block;
+      background: transparent;
+      color: orange;
+      border: 3px solid orange;
+      border-radius: 30px;
+      font-size: 26px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 18px rgba(255, 140, 0, 0.35);
+      transition: 0.3s;
+      text-decoration: none;
+    }
+
+    .lang-btn:hover {
+      transform: scale(1.03);
+      background: rgba(255, 165, 0, 0.08);
+    }
+
+    .enter-btn {
+      width: 80%;
+      max-width: 320px;
+      padding: 22px;
+      background: transparent;
+      color: orange;
+      border: 4px solid orange;
+      border-radius: 40px;
+      font-size: 34px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 140, 0, 0.25);
+      transition: 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .enter-btn:hover {
+      transform: scale(1.03);
+      background: rgba(255, 165, 0, 0.08);
+    }
+
+    @media (max-width: 600px) {
+      .avatar {
+        width: 180px;
+        height: 180px;
+      }
+
+      .title {
+        font-size: 36px;
+      }
+
+      .lang-btn {
+        font-size: 22px;
+        padding: 16px;
+      }
+
+      .enter-btn {
+        font-size: 28px;
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- بدّل اسم الصورة إلى اسم صورتك الحقيقي -->
+    <img src="avatar.jpg" alt="Avatar" class="avatar">
+
+    <div class="title">Welcome to Olkie World</div>
+
+    <!-- زر رجوع للعربي -->
+    <a href="index.html" class="lang-btn">تغيير اللغة</a>
+
+    <!-- زر الدخول -->
+    <a href="home-en.html" class="enter-btn">Enter</a>
+  </div>
+
+</body>
+</html>
