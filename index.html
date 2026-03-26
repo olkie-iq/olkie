@@ -136,3 +136,75 @@
     </script>
 </body>
 </html>
+<!DOCTYPE>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تبديل الوضع الليلي والصبحي</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      transition: background-color 0.4s ease, color 0.4s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    /* الوضع الليلي */
+    body.night {
+      background-color: #000000;
+      color: white;
+    }
+
+    /* الوضع الصبحي */
+    body.morning {
+      background-color: #2196f3;
+      color: white;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      background: white;
+      color: black;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="night">
+
+  <h1 id="modeText">الوضع الليلي </h1>
+  <button onclick="toggleMode()">تبديل الوضع</button>
+
+  <script>
+    function toggleMode() {
+      const body = document.body;
+      const text = document.getElementById("modeText");
+
+      if (body.classList.contains("night")) {
+        body.classList.remove("night");
+        body.classList.add("morning");
+        text.textContent = "الوضع الصبحي";
+      } else {
+        body.classList.remove("morning");
+        body.classList.add("night");
+        text.textContent = "الوضع الليلي";
+      }
+    }
+  </script>
+
+</body>
+</html>
