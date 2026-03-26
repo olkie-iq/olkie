@@ -208,96 +208,81 @@
 
 </body>
 </html>
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقع لولا المترجم</title>
-    <style>
-        /* تنسيق الشكل العام */
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: #eef2f7; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-            transition: 0.4s;
-        }
+<div class="container">
+    <select id="langSelector" onchange="changeLanguage(this.value)">
+        <option value="ar">العربية 🇸🇦</option>
+        <option value="en">English 🇺🇸</option>
+    </select>
 
-        .container { 
-            background: white; 
-            padding: 40px; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-            text-align: center; 
-            width: 400px;
-        }
-
-        /* تنسيق قائمة اختيار اللغة */
-        select { 
-            width: 100%; 
-            padding: 12px; 
-            border-radius: 10px; 
-            border: 2px solid #007bff; 
-            font-size: 16px; 
-            cursor: pointer; 
-            margin-bottom: 25px;
-            background-color: #fafafa;
-            outline: none;
-        }
-
-        h1 { color: #333; margin-bottom: 15px; }
-        p { color: #666; font-size: 18px; line-height: 1.6; }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <select id="langSwitcher" onchange="changeLanguage(this.value)">
-            <option value="ar">العربية 🇸🇦</option>
-            <option value="en">English 🇺🇸</option>
-            <option value="es">Español 🇪🇸</option>
-        </select>
-
-        <h1 id="title">مرحباً بك</h1>
-        <p id="description">اختر اللغة من القائمة في الأعلى وسيتم تحويل النص فوراً.</p>
+    <div class="card">
+        <h2 id="title-1">01. مَن أنا؟</h2>
+        <p id="desc-1">اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!</p>
     </div>
 
-    <script>
-        // قاموس الترجمة
-        const translations = {
-            ar: {
-                title: "مرحباً بك",
-                description: "اختر اللغة من القائمة في الأعلى وسيتم تحويل النص فوراً.",
-                dir: "rtl"
-            },
-            en: {
-                title: "Welcome",
-                description: "Choose the language from the menu above and the text will change immediately.",
-                dir: "ltr"
-            },
-            es: {
-                title: "Bienvenido",
-                description: "Elija el idioma del menú de arriba y el texto cambiará inmediatamente.",
-                dir: "ltr"
-            }
-        };
+    <div class="card">
+        <h2 id="title-2">02. ألعابي ومجتمعي</h2>
+        <div class="buttons">
+            <button id="btn-itch">🎮 ألعابي على Itch.io</button>
+            <button id="btn-discord">💬 مجتمع الديسكورد</button>
+            <button id="btn-youtube">🎥 قناة اليوتيوب</button>
+        </div>
+    </div>
 
-        function changeLanguage(lang) {
-            const data = translations[lang];
+    <div class="card">
+        <h2 id="title-3">03. الحسابات</h2>
+        <button id="btn-acc-discord">Discord Account</button>
+        <button id="btn-acc-link">LinkedIn Profile</button>
+    </div>
+</div>
+<script>
+const translations = {
+    ar: {
+        title1: "01. مَن أنا؟",
+        desc1: "اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!",
+        title2: "02. ألعابي ومجتمعي",
+        btnItch: "🎮 ألعابي على Itch.io",
+        btnDiscord: "💬 مجتمع الديسكورد",
+        btnYoutube: "🎥 قناة اليوتيوب",
+        title3: "03. الحسابات",
+        dir: "rtl"
+    },
+    en: {
+        title1: "01. Who am I?",
+        desc1: "My name is Olkie, a programmer and designer. I have some game projects that I programmed. I hope you enjoy trying my games!",
+        title2: "02. My Games & Community",
+        btnItch: "🎮 My Games on Itch.io",
+        btnDiscord: "💬 Discord Community",
+        btnYoutube: "🎥 YouTube Channel",
+        title3: "03. Accounts",
+        dir: "ltr"
+    }
+};
 
-            // تغيير النصوص في الصفحة
-            document.getElementById('title').innerText = data.title;
-            document.getElementById('description').innerText = data.description;
+function changeLanguage(lang) {
+    const data = translations[lang];
 
-            // تغيير اتجاه الصفحة (من اليمين أو من اليسار)
-            document.documentElement.dir = data.dir;
-            document.documentElement.lang = lang;
-        }
-    </script>
+    // ترجمة العناوين والنصوص
+    document.getElementById('title-1').innerText = data.title1;
+    document.getElementById('desc-1').innerText = data.desc1;
+    document.getElementById('title-2').innerText = data.title2;
+    document.getElementById('title-3').innerText = data.title3;
 
-</body>
-</html>
+    // ترجمة الأزرار
+    document.getElementById('btn-itch').innerText = data.btnItch;
+    document.getElementById('btn-discord').innerText = data.btnDiscord;
+    document.getElementById('btn-youtube').innerText = data.btnYoutube;
+
+    // تغيير اتجاه الصفحة بالكامل
+    document.documentElement.dir = data.dir;
+    
+    // حفظ اللغة المختارة في المتصفح
+    localStorage.setItem('userLang', lang);
+}
+
+// تشغيل اللغة المحفوظة عند فتح الموقع
+window.onload = () => {
+    const saved = localStorage.getItem('userLang') || 'ar';
+    document.getElementById('langSelector').value = saved;
+    changeLanguage(saved);
+};
+</script>
