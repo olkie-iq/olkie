@@ -208,3 +208,96 @@
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع لولا المترجم</title>
+    <style>
+        /* تنسيق الشكل العام */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #eef2f7; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            transition: 0.4s;
+        }
+
+        .container { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            text-align: center; 
+            width: 400px;
+        }
+
+        /* تنسيق قائمة اختيار اللغة */
+        select { 
+            width: 100%; 
+            padding: 12px; 
+            border-radius: 10px; 
+            border: 2px solid #007bff; 
+            font-size: 16px; 
+            cursor: pointer; 
+            margin-bottom: 25px;
+            background-color: #fafafa;
+            outline: none;
+        }
+
+        h1 { color: #333; margin-bottom: 15px; }
+        p { color: #666; font-size: 18px; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <select id="langSwitcher" onchange="changeLanguage(this.value)">
+            <option value="ar">العربية 🇸🇦</option>
+            <option value="en">English 🇺🇸</option>
+            <option value="es">Español 🇪🇸</option>
+        </select>
+
+        <h1 id="title">مرحباً بك</h1>
+        <p id="description">اختر اللغة من القائمة في الأعلى وسيتم تحويل النص فوراً.</p>
+    </div>
+
+    <script>
+        // قاموس الترجمة
+        const translations = {
+            ar: {
+                title: "مرحباً بك",
+                description: "اختر اللغة من القائمة في الأعلى وسيتم تحويل النص فوراً.",
+                dir: "rtl"
+            },
+            en: {
+                title: "Welcome",
+                description: "Choose the language from the menu above and the text will change immediately.",
+                dir: "ltr"
+            },
+            es: {
+                title: "Bienvenido",
+                description: "Elija el idioma del menú de arriba y el texto cambiará inmediatamente.",
+                dir: "ltr"
+            }
+        };
+
+        function changeLanguage(lang) {
+            const data = translations[lang];
+
+            // تغيير النصوص في الصفحة
+            document.getElementById('title').innerText = data.title;
+            document.getElementById('description').innerText = data.description;
+
+            // تغيير اتجاه الصفحة (من اليمين أو من اليسار)
+            document.documentElement.dir = data.dir;
+            document.documentElement.lang = lang;
+        }
+    </script>
+
+</body>
+</html>
