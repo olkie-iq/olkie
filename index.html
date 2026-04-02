@@ -390,7 +390,8 @@
 
     </div>
 
-    <div class="controls">
+
+    <div class="controls" id="controls" style="display:none;">
         <button class="control-btn" onclick="toggleLanguage()" id="langBtn">EN 🇺🇸</button>
         <button class="control-btn" onclick="toggleMode()" id="modeBtn">تبديل الوضع</button>
     </div>
@@ -469,6 +470,7 @@
                 ws.style.display = 'none';
                 var content = document.getElementById('main-content');
                 content.classList.add('visible');
+                document.getElementById('controls').style.display = 'flex';
             }, 600);
         }
 
