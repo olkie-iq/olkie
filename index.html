@@ -296,7 +296,7 @@
             background: linear-gradient(to top, rgba(0,0,0,0.97) 60%, transparent);
         }
 
-        .control-btn, .lang-select {
+        .control-btn {
             flex: 1;
             padding: 11px 14px;
             border-radius: 10px;
@@ -313,12 +313,12 @@
             text-align: center;
         }
 
-        .control-btn:hover, .lang-select:hover {
+        .control-btn:hover {
             border-color: var(--neon);
             background: rgba(255,140,0,0.08);
         }
 
-        .lang-select option { background: #111; color: #fff; }
+
 
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -391,14 +391,18 @@
     </div>
 
     <div class="controls">
-        <select class="lang-select" id="langSelector" onchange="changeLanguage(this.value)">
-            <option value="ar">العربية 🇸🇦</option>
-            <option value="en">English 🇺🇸</option>
-        </select>
+        <button class="control-btn" onclick="toggleLanguage()" id="langBtn">EN 🇺🇸</button>
         <button class="control-btn" onclick="toggleMode()" id="modeBtn">تبديل الوضع</button>
     </div>
 
     <script>
+        var currentLang = 'ar';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            changeLanguage(currentLang);
+        }
+
         var T = {
             ar: {
                 welcome: "أهلاً في عالم أولكي",
@@ -441,6 +445,7 @@
             document.getElementById('b2').textContent = d.b2;
             document.getElementById('b3').textContent = d.b3;
             document.getElementById('modeBtn').textContent = d.btnMode;
+            document.getElementById('langBtn').textContent = lang === 'ar' ? 'EN 🇺🇸' : 'عربي 🇸🇦';
             updateModeText();
         }
 
