@@ -1,8 +1,13 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="أولكي - مبرمج ومصمم ألعاب">
+    <meta name="author" content="Olkie">
+    <meta property="og:title" content="عالم أولكي | Olkie World">
+    <meta property="og:type" content="website">
     <title>عالم أولكي | Olkie World</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -33,7 +38,29 @@
             overflow-x: hidden;
         }
 
-        /* ── NOISE OVERLAY ── */
+        /* LOADER */
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .loader.hide { opacity: 0; pointer-events: none; }
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 2px solid var(--border);
+            border-top-color: var(--neon);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* NOISE OVERLAY */
         body::before {
             content: '';
             position: fixed;
@@ -44,7 +71,7 @@
             opacity: 0.55;
         }
 
-        /* ── CANVAS ── */
+        /* CANVAS */
         #matrix-canvas {
             position: fixed;
             inset: 0;
@@ -53,7 +80,7 @@
             pointer-events: none;
         }
 
-        /* ── GRID LINES BG ── */
+        /* GRID BG */
         .grid-bg {
             position: fixed;
             inset: 0;
@@ -65,9 +92,7 @@
             background-size: 60px 60px;
         }
 
-        /* ════════════════════════════
-           WELCOME SCREEN
-        ════════════════════════════ */
+        /* WELCOME SCREEN */
         #welcome-screen {
             position: fixed;
             inset: 0;
@@ -85,7 +110,6 @@
             pointer-events: none;
         }
 
-        /* scan line animation on welcome */
         #welcome-screen::after {
             content: '';
             position: absolute;
@@ -101,7 +125,6 @@
             100% { top: 100%; }
         }
 
-        /* avatar */
         .avatar-frame {
             position: relative;
             width: 140px;
@@ -150,7 +173,6 @@
             box-shadow: 0 0 40px rgba(255,140,0,0.25), inset 0 0 20px rgba(255,140,0,0.05);
         }
 
-        /* corner decorations */
         .corner-box {
             position: absolute;
             width: 12px;
@@ -172,7 +194,6 @@
         .corner-bl { bottom: -24px; right: -24px; transform: scaleY(-1); }
         .corner-br { bottom: -24px; left: -24px; transform: scale(-1); }
 
-        /* welcome text */
         .welcome-name {
             font-family: 'Orbitron', monospace;
             font-size: clamp(1.3rem, 4vw, 2rem);
@@ -181,11 +202,6 @@
             color: var(--text);
             margin-bottom: 6px;
             text-transform: uppercase;
-        }
-
-        .welcome-name span {
-            color: var(--neon);
-            text-shadow: 0 0 20px var(--glow);
         }
 
         .typing-wrapper {
@@ -216,7 +232,6 @@
             50% { opacity: 0; }
         }
 
-        /* enter button */
         .enter-btn {
             position: relative;
             width: 180px;
@@ -253,7 +268,6 @@
 
         .enter-btn span { position: relative; z-index: 1; }
 
-        /* status bar */
         .status-bar {
             position: absolute;
             bottom: 30px;
@@ -283,9 +297,7 @@
             50%       { opacity: 0.4; transform: scale(0.7); }
         }
 
-        /* ════════════════════════════
-           MAIN CONTENT
-        ════════════════════════════ */
+        /* MAIN CONTENT */
         .main-container {
             max-width: 720px;
             margin: 0 auto;
@@ -305,7 +317,6 @@
             to   { opacity: 1; transform: translateY(0); }
         }
 
-        /* header bar */
         .page-header {
             display: flex;
             align-items: center;
@@ -342,7 +353,7 @@
             box-shadow: 0 0 6px var(--neon);
         }
 
-        /* ── CARDS ── */
+        /* CARDS */
         .card {
             position: relative;
             background: var(--surface);
@@ -443,7 +454,7 @@
             border-top-color: var(--border);
         }
 
-        /* ── LINKS ── */
+        /* LINKS */
         .links-grid {
             display: flex;
             flex-wrap: wrap;
@@ -475,9 +486,7 @@
             box-shadow: 0 8px 24px rgba(255,140,0,0.3);
         }
 
-        /* ════════════════════════════
-           CONTROLS
-        ════════════════════════════ */
+        /* CONTROLS */
         .controls {
             position: fixed;
             bottom: 0; left: 0; right: 0;
@@ -513,26 +522,35 @@
             box-shadow: 0 0 20px rgba(255,140,0,0.1);
         }
 
-        /* ── SCROLLBAR ── */
+        /* MORNING MODE */
+        body.morning { --bg:#0b1624; --bg2:#0d1e30; --surface:rgba(10,22,40,0.92); --text:#ddeeff; --text-dim:#5a7a99; --text-mid:#8aaabb; }
+
+        /* SCROLLBAR */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,140,0,0.3); }
 
-        /* ── RESPONSIVE ── */
+        /* RESPONSIVE */
         @media (max-width: 480px) {
             .main-container { padding: 36px 16px 120px; }
             .card-header { padding: 16px 18px; }
-            .card.active .card-content { padding: 14px 18px 20px; }
+            .card.active .card-content { padding: 14px 18px 20px; font-size: 0.85rem; line-height: 1.7; }
             .welcome-name { letter-spacing: 0.06em; }
+            .btn-link { padding: 8px 16px; font-size: 0.8rem; width: 100%; justify-content: center; }
+            .controls { padding: 10px 16px; gap: 8px; }
+            .control-btn { padding: 8px 10px; font-size: 0.6rem; }
         }
     </style>
 </head>
 <body>
 
+    <div class="loader" id="loader">
+        <div class="loader-spinner"></div>
+    </div>
     <div class="grid-bg"></div>
     <canvas id="matrix-canvas"></canvas>
 
-    <!-- ══ WELCOME ══ -->
+    <!-- WELCOME -->
     <div id="welcome-screen">
         <div class="avatar-frame">
             <div class="corner-box corner-tl"></div>
@@ -540,7 +558,7 @@
             <div class="corner-box corner-bl"></div>
             <div class="corner-box corner-br"></div>
             <img src="olkie.jpg" class="profile-img" alt="Olkie"
-                 onerror="this.src='https://ui-avatars.com/api/?name=OL&background=ff8c00&color=000&size=200&bold=true'">
+                 onerror="this.src='https://ui-avatars.com/api/?name=OLKIE&background=ff8c00&color=fff&size=200&bold=true'">
         </div>
 
         <div class="welcome-name" id="welcomeText">OLKIE <span>WORLD</span></div>
@@ -549,7 +567,7 @@
             <span id="typed-text"></span><span class="cursor"></span>
         </div>
 
-        <button class="enter-btn" id="enterBtn" onclick="openWorld()">
+        <button class="enter-btn" id="enterBtn">
             <span>دخول</span>
         </button>
 
@@ -559,7 +577,7 @@
         </div>
     </div>
 
-    <!-- ══ MAIN ══ -->
+    <!-- MAIN -->
     <div class="main-container" id="main-content">
 
         <div class="page-header">
@@ -610,20 +628,22 @@
             </div>
             <div class="card-content">
                 <div class="links-grid">
-                    <a href="https://www.linkedin.com/in/olkie-اولكي-7bb798370" target="_blank" class="btn-link">💼 LinkedIn</a>
+                    <a href="https://www.linkedin.com/in/olkie-%D8%A7%D9%88%D9%84%D9%83%D9%8A-7bb798370" target="_blank" class="btn-link">💼 LinkedIn</a>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <!-- ══ CONTROLS ══ -->
+    <!-- CONTROLS -->
     <div class="controls" id="controls">
-        <button class="control-btn" onclick="toggleLanguage()" id="langBtn">EN</button>
-        <button class="control-btn" onclick="toggleMode()" id="modeBtn">TOGGLE MODE</button>
+        <button class="control-btn" id="langBtn">EN</button>
+        <button class="control-btn" id="modeBtn">TOGGLE MODE</button>
+        <button class="control-btn" id="homeBtn">🏠 الرئيسية</button>
     </div>
 
     <script>
+        // ==================== TRANSLATIONS ====================
         var T = {
             ar: {
                 welcome: "OLKIE <span style='color:var(--neon);text-shadow:0 0 20px rgba(255,140,0,0.5)'>WORLD</span>",
@@ -637,7 +657,7 @@
                 b1:"🎮 Itch.io", b2:"💬 Discord", b3:"🎥 YouTube",
                 n3:"// 03", h3:"الحسابات",
                 modeN:"NIGHT MODE", modeM:"MORNING MODE",
-                btnMode:"TOGGLE MODE", langSwitch:"EN", dir:"rtl"
+                btnMode:"TOGGLE MODE", langSwitch:"EN", home:"🏠 الرئيسية", dir:"rtl"
             },
             en: {
                 welcome: "OLKIE <span style='color:var(--neon);text-shadow:0 0 20px rgba(255,140,0,0.5)'>WORLD</span>",
@@ -651,13 +671,22 @@
                 b1:"🎮 Itch.io", b2:"💬 Discord", b3:"🎥 YouTube",
                 n3:"// 03", h3:"Accounts",
                 modeN:"NIGHT MODE", modeM:"MORNING MODE",
-                btnMode:"TOGGLE MODE", langSwitch:"عربي", dir:"ltr"
+                btnMode:"TOGGLE MODE", langSwitch:"عربي", home:"🏠 HOME", dir:"ltr"
             }
         };
 
         var currentLang = 'ar';
 
-        /* ── TYPING ── */
+        // ==================== LOADER ====================
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                var loader = document.getElementById('loader');
+                loader.classList.add('hide');
+                setTimeout(function() { loader.style.display = 'none'; }, 500);
+            }, 500);
+        });
+
+        // ==================== TYPING EFFECT ====================
         var typedEl = document.getElementById('typed-text');
         var wordIndex = 0;
         var charIndex = 0;
@@ -676,9 +705,10 @@
         }
         type();
 
-        /* ── LANGUAGE ── */
+        // ==================== LANGUAGE SWITCH ====================
         function toggleLanguage() {
             currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            localStorage.setItem('olkie_lang', currentLang);
             var d = T[currentLang];
             document.documentElement.dir = d.dir;
             document.documentElement.lang = currentLang;
@@ -698,6 +728,7 @@
             document.getElementById('h3').textContent = d.h3;
             document.getElementById('modeBtn').textContent = d.btnMode;
             document.getElementById('langBtn').textContent = d.langSwitch;
+            document.getElementById('homeBtn').innerHTML = d.home;
             clearTimeout(typingTimeout);
             charIndex = 0; isDeleting = false; wordIndex = 0;
             typedEl.textContent = '';
@@ -705,10 +736,11 @@
             updateModeText();
         }
 
-        /* ── MODE ── */
+        // ==================== MODE ====================
         function toggleMode() {
             document.body.classList.toggle('morning');
             matrixColor = document.body.classList.contains('morning') ? '#4da6ff' : '#ff8c00';
+            localStorage.setItem('olkie_mode', document.body.classList.contains('morning') ? 'morning' : 'night');
             updateModeText();
         }
 
@@ -717,13 +749,26 @@
             document.getElementById('modeStatus').textContent = isMorning ? T[currentLang].modeM : T[currentLang].modeN;
         }
 
-        /* morning overrides */
-        var styleTag = document.createElement('style');
-        styleTag.textContent = 'body.morning { --bg:#0b1624; --bg2:#0d1e30; --surface:rgba(10,22,40,0.92); --text:#ddeeff; --text-dim:#5a7a99; --text-mid:#8aaabb; }';
-        document.head.appendChild(styleTag);
+        // ==================== SOUND EFFECT (simple beep) ====================
+        function playClickSound() {
+            try {
+                var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                var oscillator = audioCtx.createOscillator();
+                var gainNode = audioCtx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.frequency.value = 880;
+                gainNode.gain.value = 0.1;
+                oscillator.start();
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+                audioCtx.resume();
+            } catch(e) { console.log('Audio not supported'); }
+        }
 
-        /* ── ENTER ── */
+        // ==================== OPEN WORLD ====================
         function openWorld() {
+            playClickSound();
             var ws = document.getElementById('welcome-screen');
             ws.classList.add('hiding');
             setTimeout(function() {
@@ -734,27 +779,39 @@
             }, 800);
         }
 
-        /* ── CARDS ── */
+        // ==================== BACK TO WELCOME ====================
+        function backToWelcome() {
+            playClickSound();
+            document.getElementById('main-content').classList.remove('visible');
+            document.getElementById('controls').style.display = 'none';
+            var ws = document.getElementById('welcome-screen');
+            ws.style.display = 'flex';
+            ws.classList.remove('hiding');
+        }
+
+        // ==================== CARDS ====================
         function toggleCard(header) {
             var card = header.parentElement;
             var icon = header.querySelector('.toggle-icon');
             document.querySelectorAll('.card').forEach(function(c) {
                 if (c !== card) {
                     c.classList.remove('active');
-                    c.querySelector('.toggle-icon').textContent = '+';
+                    var otherIcon = c.querySelector('.toggle-icon');
+                    if (otherIcon) otherIcon.textContent = '+';
                 }
             });
             var active = card.classList.toggle('active');
             icon.textContent = active ? '×' : '+';
         }
 
-        /* ── MATRIX ── */
+        // ==================== MATRIX EFFECT (optimized) ====================
         var canvas = document.getElementById('matrix-canvas');
         var ctx = canvas.getContext('2d');
         var matrixColor = '#ff8c00';
         var chars = "OLKIE01";
         var fontSize = 13;
         var drops = [];
+        var animationId;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -776,9 +833,50 @@
             }
         }
 
+        function animateMatrix() {
+            drawMatrix();
+            animationId = requestAnimationFrame(animateMatrix);
+        }
+
+        // ==================== LOAD SAVED SETTINGS ====================
+        function loadSavedSettings() {
+            var savedLang = localStorage.getItem('olkie_lang');
+            if (savedLang && savedLang !== currentLang) {
+                currentLang = savedLang;
+                var d = T[currentLang];
+                document.documentElement.dir = d.dir;
+                document.documentElement.lang = currentLang;
+                document.getElementById('welcomeText').innerHTML = d.welcome;
+                document.getElementById('enterBtn').querySelector('span').textContent = d.enter;
+                document.getElementById('statusLabel').textContent = d.status;
+                document.getElementById('pageHeaderTitle').textContent = d.pageHeader;
+                document.getElementById('n1').textContent = d.n1;
+                document.getElementById('h1').textContent = d.h1;
+                document.getElementById('c1').textContent = d.c1;
+                document.getElementById('n2').textContent = d.n2;
+                document.getElementById('h2').textContent = d.h2;
+                document.getElementById('b1').textContent = d.b1;
+                document.getElementById('b2').textContent = d.b2;
+                document.getElementById('b3').textContent = d.b3;
+                document.getElementById('n3').textContent = d.n3;
+                document.getElementById('h3').textContent = d.h3;
+                document.getElementById('modeBtn').textContent = d.btnMode;
+                document.getElementById('langBtn').textContent = d.langSwitch;
+                document.getElementById('homeBtn').innerHTML = d.home;
+                clearTimeout(typingTimeout);
+                charIndex = 0; isDeleting = false; wordIndex = 0;
+                typedEl.textContent = '';
+                type();
+            }
+            
+            var savedMode = localStorage.getItem('olkie_mode');
+            if (savedMode === 'morning') {
+                document.body.classList.add('morning');
+                matrixColor = '#4da6ff';
+                updateModeText();
+            }
+        }
+
+        // ==================== INITIALIZE ====================
         resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-        setInterval(drawMatrix, 40);
-    </script>
-</body>
-</html>
+        window.addEventListener('resize
