@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -6,18 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="أولكي - مبرمج ومصمم ألعاب">
     <meta name="author" content="Olkie">
-    <meta property="og:title" content="عالم أولكي | Olkie World">
-    <meta property="og:type" content="website">
     <title>عالم أولكي | Olkie World</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* تحسينات سريعة - تقليل التأثيرات الثقيلة */
         :root {
             --neon: #ff8c00;
             --neon2: #ff4500;
             --glow: rgba(255,140,0,0.35);
-            --glow-strong: rgba(255,140,0,0.6);
             --bg: #050505;
-            --bg2: #0a0a0a;
             --surface: rgba(18,18,18,0.92);
             --border: rgba(255,140,0,0.18);
             --border-hover: rgba(255,140,0,0.55);
@@ -26,10 +22,7 @@
             --text-mid: #b0a898;
         }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        html { scroll-behavior: smooth; }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             min-height: 100vh;
             font-family: 'Cairo', sans-serif;
@@ -38,61 +31,19 @@
             overflow-x: hidden;
         }
 
-        /* LOADER */
-        .loader {
-            position: fixed;
-            inset: 0;
-            background: var(--bg);
-            z-index: 10001;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.5s ease;
-        }
-        .loader.hide { opacity: 0; pointer-events: none; }
-        .loader-spinner {
-            width: 50px;
-            height: 50px;
-            border: 2px solid var(--border);
-            border-top-color: var(--neon);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        /* إزالة الضوضاء الثقيلة */
+        body::before { display: none; }
 
-        /* NOISE OVERLAY */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0.55;
-        }
-
-        /* CANVAS */
+        /* خلفية المصفوفة مبسطة */
         #matrix-canvas {
             position: fixed;
             inset: 0;
             z-index: 0;
-            opacity: 0.12;
+            opacity: 0.08;
             pointer-events: none;
         }
 
-        /* GRID BG */
-        .grid-bg {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            background-image:
-                linear-gradient(rgba(255,140,0,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,140,0,0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
-        }
-
-        /* WELCOME SCREEN */
+        /* شاشة الترحيب */
         #welcome-screen {
             position: fixed;
             inset: 0;
@@ -101,485 +52,286 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            background: var(--bg);
+            transition: opacity 0.5s ease;
         }
+        #welcome-screen.hiding { opacity: 0; pointer-events: none; }
 
-        #welcome-screen.hiding {
-            opacity: 0;
-            transform: scale(1.06);
-            pointer-events: none;
-        }
-
-        #welcome-screen::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon), transparent);
-            animation: scan 4s linear infinite;
-            opacity: 0.4;
-        }
-
-        @keyframes scan {
-            0%   { top: 0%; }
-            100% { top: 100%; }
-        }
-
+        /* الصورة الرمزية */
         .avatar-frame {
             position: relative;
-            width: 140px;
-            height: 140px;
-            margin-bottom: 32px;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 25px;
         }
-
-        .avatar-frame::before,
-        .avatar-frame::after {
-            content: '';
-            position: absolute;
-            border-radius: 50%;
-            animation: orbit 3s linear infinite;
-        }
-
-        .avatar-frame::before {
-            inset: -10px;
-            border: 1px solid transparent;
-            border-top-color: var(--neon);
-            border-right-color: rgba(255,140,0,0.3);
-        }
-
-        .avatar-frame::after {
-            inset: -20px;
-            border: 1px solid transparent;
-            border-bottom-color: var(--neon2);
-            border-left-color: rgba(255,69,0,0.2);
-            animation-duration: 5s;
-            animation-direction: reverse;
-        }
-
-        @keyframes orbit {
-            from { transform: rotate(0deg); }
-            to   { transform: rotate(360deg); }
-        }
-
         .profile-img {
-            width: 140px;
-            height: 140px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             border: 2px solid var(--neon);
             object-fit: cover;
-            display: block;
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 0 40px rgba(255,140,0,0.25), inset 0 0 20px rgba(255,140,0,0.05);
+            box-shadow: 0 0 20px rgba(255,140,0,0.25);
         }
-
-        .corner-box {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-        }
-
-        .corner-box::before,
-        .corner-box::after {
-            content: '';
-            position: absolute;
-            background: var(--neon);
-        }
-
-        .corner-box::before { width: 100%; height: 1.5px; top: 0; }
-        .corner-box::after  { width: 1.5px; height: 100%; top: 0; }
-
-        .corner-tl { top: -24px; right: -24px; }
-        .corner-tr { top: -24px; left: -24px; transform: scaleX(-1); }
-        .corner-bl { bottom: -24px; right: -24px; transform: scaleY(-1); }
-        .corner-br { bottom: -24px; left: -24px; transform: scale(-1); }
 
         .welcome-name {
             font-family: 'Orbitron', monospace;
-            font-size: clamp(1.3rem, 4vw, 2rem);
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
             font-weight: 900;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.1em;
             color: var(--text);
-            margin-bottom: 6px;
-            text-transform: uppercase;
+            margin-bottom: 10px;
         }
+        .welcome-name span { color: var(--neon); }
 
         .typing-wrapper {
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             color: var(--text-dim);
-            letter-spacing: 0.08em;
-            margin-bottom: 36px;
+            margin-bottom: 30px;
             height: 1.6em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            text-transform: uppercase;
         }
-
         #typed-text { color: var(--neon); font-weight: 600; }
-
         .cursor {
             display: inline-block;
             width: 2px;
             height: 0.9em;
             background: var(--neon);
             animation: blink 0.7s step-end infinite;
-            vertical-align: middle;
         }
-
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
+        @keyframes blink { 50% { opacity: 0; } }
 
         .enter-btn {
-            position: relative;
-            width: 180px;
-            padding: 14px 0;
+            width: 160px;
+            padding: 12px 0;
             background: transparent;
             border: 1px solid var(--neon);
             color: var(--neon);
             font-family: 'Orbitron', monospace;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
+            letter-spacing: 0.15em;
             cursor: pointer;
-            overflow: hidden;
-            transition: color 0.3s ease, box-shadow 0.3s ease;
-            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            transition: all 0.3s ease;
         }
-
-        .enter-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: var(--neon);
-            transform: translateX(-105%);
-            transition: transform 0.35s ease;
-            z-index: 0;
-        }
-
-        .enter-btn:hover::before { transform: translateX(0); }
         .enter-btn:hover {
+            background: var(--neon);
             color: #000;
-            box-shadow: 0 0 40px var(--glow-strong);
+            box-shadow: 0 0 20px rgba(255,140,0,0.4);
         }
-
-        .enter-btn span { position: relative; z-index: 1; }
 
         .status-bar {
             position: absolute;
-            bottom: 30px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             font-family: 'Orbitron', monospace;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             color: var(--text-dim);
-            letter-spacing: 0.15em;
             white-space: nowrap;
         }
-
         .status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--neon);
-            box-shadow: 0 0 8px var(--neon);
-            animation: pulse-dot 1.5s ease-in-out infinite;
-        }
-
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50%       { opacity: 0.4; transform: scale(0.7); }
-        }
-
-        /* MAIN CONTENT */
-        .main-container {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 52px 24px 130px;
-            position: relative;
-            z-index: 10;
-            display: none;
-        }
-
-        .main-container.visible {
-            display: block;
-            animation: fadeSlide 0.8s ease forwards;
-        }
-
-        @keyframes fadeSlide {
-            from { opacity: 0; transform: translateY(24px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .page-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 40px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .page-header-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.25em;
-            color: var(--text-dim);
-            text-transform: uppercase;
-        }
-
-        .mode-badge {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            font-family: 'Orbitron', monospace;
-            font-size: 0.62rem;
-            color: var(--neon);
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-        }
-
-        .mode-badge-dot {
             width: 5px;
             height: 5px;
             border-radius: 50%;
             background: var(--neon);
-            box-shadow: 0 0 6px var(--neon);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse { 50% { opacity: 0.4; } }
+
+        /* المحتوى الرئيسي */
+        .main-container {
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 40px 20px 100px;
+            position: relative;
+            z-index: 10;
+            display: none;
+        }
+        .main-container.visible {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* CARDS */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .page-header-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            color: var(--text-dim);
+        }
+        .mode-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.58rem;
+            color: var(--neon);
+        }
+        .mode-badge-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--neon);
+        }
+
+        /* البطاقات */
         .card {
-            position: relative;
             background: var(--surface);
             border: 1px solid var(--border);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             overflow: hidden;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+            transition: all 0.2s ease;
         }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 3px;
-            height: 0;
-            background: linear-gradient(to bottom, var(--neon), var(--neon2));
-            transition: height 0.4s ease;
-        }
-
-        .card:hover::before,
-        .card.active::before { height: 100%; }
-
-        .card:hover {
-            border-color: var(--border-hover);
-            box-shadow: 0 0 30px rgba(255,140,0,0.07), inset 0 0 30px rgba(255,140,0,0.02);
-        }
-
-        .card.active {
-            border-color: rgba(255,140,0,0.45);
-            box-shadow: 0 0 40px rgba(255,140,0,0.1), inset 0 0 40px rgba(255,140,0,0.03);
-        }
+        .card:hover { border-color: var(--border-hover); }
+        .card.active { border-color: rgba(255,140,0,0.4); }
 
         .card-header {
-            padding: 20px 24px;
+            padding: 15px 20px;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            user-select: none;
-            transition: background 0.2s ease;
         }
-
-        .card-header:hover { background: rgba(255,140,0,0.03); }
-
         .card-num {
             font-family: 'Orbitron', monospace;
-            font-size: 0.62rem;
+            font-size: 0.55rem;
             color: var(--neon);
-            letter-spacing: 0.2em;
-            margin-bottom: 3px;
             display: block;
             opacity: 0.7;
         }
-
-        .card-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--text);
-            letter-spacing: 0.03em;
-        }
-
+        .card-title { font-size: 0.95rem; font-weight: 700; }
         .toggle-icon {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             border: 1px solid var(--border-hover);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--neon);
-            transition: transform 0.35s ease, background 0.25s ease, border-color 0.25s ease;
-            flex-shrink: 0;
-            clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+            transition: all 0.25s ease;
         }
-
         .card.active .toggle-icon {
             transform: rotate(45deg);
             background: var(--neon);
             color: #000;
-            border-color: var(--neon);
         }
-
         .card-content {
             overflow: hidden;
             max-height: 0;
-            transition: max-height 0.45s ease, padding 0.3s ease;
-            padding: 0 24px;
+            transition: max-height 0.35s ease;
+            padding: 0 20px;
             color: var(--text-mid);
-            line-height: 2;
-            font-size: 0.95rem;
-            border-top: 1px solid transparent;
+            line-height: 1.8;
+            font-size: 0.9rem;
         }
-
         .card.active .card-content {
-            max-height: 400px;
-            padding: 16px 24px 24px;
-            border-top-color: var(--border);
+            max-height: 300px;
+            padding: 12px 20px 20px;
+            border-top: 1px solid var(--border);
         }
 
-        /* LINKS */
+        /* الروابط */
         .links-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
         }
-
         .btn-link {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
+            gap: 6px;
+            padding: 8px 16px;
             border: 1px solid var(--border);
             background: rgba(255,140,0,0.04);
             color: var(--text-mid);
             text-decoration: none;
-            font-family: 'Cairo', sans-serif;
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            letter-spacing: 0.03em;
-            transition: all 0.25s ease;
-            clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+            transition: all 0.2s ease;
         }
-
         .btn-link:hover {
             background: var(--neon);
-            border-color: var(--neon);
             color: #000;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(255,140,0,0.3);
+            transform: translateY(-1px);
         }
 
-        /* CONTROLS */
+        /* أزرار التحكم */
         .controls {
             position: fixed;
-            bottom: 0; left: 0; right: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
             z-index: 500;
-            padding: 14px 24px;
+            padding: 10px 20px;
             display: none;
-            gap: 10px;
-            background: linear-gradient(to top, rgba(5,5,5,0.98) 50%, transparent);
-            -webkit-backdrop-filter: blur(6px);
-            backdrop-filter: blur(6px);
+            gap: 8px;
+            background: linear-gradient(to top, rgba(5,5,5,0.98), transparent);
+            backdrop-filter: blur(5px);
         }
-
         .control-btn {
             flex: 1;
-            padding: 11px 14px;
+            padding: 8px 12px;
             border: 1px solid var(--border);
             background: rgba(10,10,10,0.95);
             color: var(--text-mid);
             font-family: 'Orbitron', monospace;
-            font-size: 0.68rem;
+            font-size: 0.6rem;
             font-weight: 700;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
+            letter-spacing: 0.1em;
             cursor: pointer;
-            transition: all 0.25s ease;
-            clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+            transition: all 0.2s ease;
         }
-
         .control-btn:hover {
             border-color: var(--neon);
             color: var(--neon);
-            background: rgba(255,140,0,0.06);
-            box-shadow: 0 0 20px rgba(255,140,0,0.1);
         }
 
-        /* MORNING MODE */
-        body.morning { --bg:#0b1624; --bg2:#0d1e30; --surface:rgba(10,22,40,0.92); --text:#ddeeff; --text-dim:#5a7a99; --text-mid:#8aaabb; }
+        /* وضع الصباح */
+        body.morning { --bg:#0b1624; --surface:rgba(10,22,40,0.92); --text:#ddeeff; --text-dim:#5a7a99; --text-mid:#8aaabb; }
 
-        /* SCROLLBAR */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,140,0,0.3); }
-
-        /* RESPONSIVE */
         @media (max-width: 480px) {
-            .main-container { padding: 36px 16px 120px; }
-            .card-header { padding: 16px 18px; }
-            .card.active .card-content { padding: 14px 18px 20px; font-size: 0.85rem; line-height: 1.7; }
-            .welcome-name { letter-spacing: 0.06em; }
-            .btn-link { padding: 8px 16px; font-size: 0.8rem; width: 100%; justify-content: center; }
-            .controls { padding: 10px 16px; gap: 8px; }
-            .control-btn { padding: 8px 10px; font-size: 0.6rem; }
+            .main-container { padding: 30px 15px 90px; }
+            .card-header { padding: 12px 15px; }
+            .btn-link { padding: 6px 12px; font-size: 0.8rem; width: 100%; justify-content: center; }
         }
     </style>
 </head>
 <body>
 
-    <div class="loader" id="loader">
-        <div class="loader-spinner"></div>
-    </div>
-    <div class="grid-bg"></div>
     <canvas id="matrix-canvas"></canvas>
 
-    <!-- WELCOME -->
+    <!-- شاشة الترحيب -->
     <div id="welcome-screen">
         <div class="avatar-frame">
-            <div class="corner-box corner-tl"></div>
-            <div class="corner-box corner-tr"></div>
-            <div class="corner-box corner-bl"></div>
-            <div class="corner-box corner-br"></div>
-            <img src="olkie.jpg" class="profile-img" alt="Olkie"
-                 onerror="this.src='https://ui-avatars.com/api/?name=OLKIE&background=ff8c00&color=fff&size=200&bold=true'">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='60' fill='%23ff8c00'/%3E%3Ctext x='60' y='78' text-anchor='middle' fill='%23000' font-size='48' font-weight='bold' font-family='Arial'%3EOL%3C/text%3E%3C/svg%3E" 
+                 class="profile-img" alt="Olkie">
         </div>
-
         <div class="welcome-name" id="welcomeText">OLKIE <span>WORLD</span></div>
-
         <div class="typing-wrapper">
             <span id="typed-text"></span><span class="cursor"></span>
         </div>
-
-        <button class="enter-btn" id="enterBtn">
-            <span>دخول</span>
-        </button>
-
+        <button class="enter-btn" id="enterBtn"><span>دخول</span></button>
         <div class="status-bar">
             <div class="status-dot"></div>
             <span id="statusLabel">SYSTEM ONLINE</span>
         </div>
     </div>
 
-    <!-- MAIN -->
+    <!-- المحتوى الرئيسي -->
     <div class="main-container" id="main-content">
-
         <div class="page-header">
             <div class="page-header-title" id="pageHeaderTitle">OLKIE.PORTFOLIO</div>
             <div class="mode-badge">
@@ -590,128 +342,90 @@
 
         <div class="card">
             <div class="card-header" onclick="toggleCard(this)">
-                <div>
-                    <span class="card-num" id="n1">// 01</span>
-                    <span class="card-title" id="h1">مَن أنا؟</span>
-                </div>
+                <div><span class="card-num" id="n1">// 01</span><span class="card-title" id="h1">مَن أنا؟</span></div>
                 <div class="toggle-icon">+</div>
             </div>
-            <div class="card-content">
-                <p id="c1">اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!</p>
-            </div>
+            <div class="card-content"><p id="c1">اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!</p></div>
         </div>
 
         <div class="card">
             <div class="card-header" onclick="toggleCard(this)">
-                <div>
-                    <span class="card-num" id="n2">// 02</span>
-                    <span class="card-title" id="h2">ألعابي ومجتمعي</span>
-                </div>
+                <div><span class="card-num" id="n2">// 02</span><span class="card-title" id="h2">ألعابي ومجتمعي</span></div>
                 <div class="toggle-icon">+</div>
             </div>
             <div class="card-content">
                 <div class="links-grid">
                     <a href="https://olkie-1.itch.io/" target="_blank" class="btn-link" id="b1">🎮 Itch.io</a>
-                    <a href="https://discord.com/channels/1252787684947005552/1253135065865519135" target="_blank" class="btn-link" id="b2">💬 Discord</a>
-                    <a href="https://youtube.com/@_olkie?si=kEObA2_kbXdKUb6t" target="_blank" class="btn-link" id="b3">🎥 YouTube</a>
+                    <a href="https://discord.gg/" target="_blank" class="btn-link" id="b2">💬 Discord</a>
+                    <a href="https://youtube.com/" target="_blank" class="btn-link" id="b3">🎥 YouTube</a>
                 </div>
             </div>
         </div>
 
         <div class="card">
             <div class="card-header" onclick="toggleCard(this)">
-                <div>
-                    <span class="card-num" id="n3">// 03</span>
-                    <span class="card-title" id="h3">الحسابات</span>
-                </div>
+                <div><span class="card-num" id="n3">// 03</span><span class="card-title" id="h3">الحسابات</span></div>
                 <div class="toggle-icon">+</div>
             </div>
             <div class="card-content">
                 <div class="links-grid">
-                    <a href="https://www.linkedin.com/in/olkie-%D8%A7%D9%88%D9%84%D9%83%D9%8A-7bb798370" target="_blank" class="btn-link">💼 LinkedIn</a>
+                    <a href="#" target="_blank" class="btn-link">💼 LinkedIn</a>
                 </div>
             </div>
         </div>
-
     </div>
 
-    <!-- CONTROLS -->
+    <!-- أزرار التحكم -->
     <div class="controls" id="controls">
         <button class="control-btn" id="langBtn">EN</button>
-        <button class="control-btn" id="modeBtn">TOGGLE MODE</button>
-        <button class="control-btn" id="homeBtn">🏠 الرئيسية</button>
+        <button class="control-btn" id="modeBtn">MODE</button>
+        <button class="control-btn" id="homeBtn">🏠 HOME</button>
     </div>
 
     <script>
-        // ==================== TRANSLATIONS ====================
-        var T = {
+        // البيانات
+        const T = {
             ar: {
-                welcome: "OLKIE <span style='color:var(--neon);text-shadow:0 0 20px rgba(255,140,0,0.5)'>WORLD</span>",
+                welcome: "OLKIE <span>WORLD</span>",
                 words: ["مبرمج", "مصمم", "صانع ألعاب"],
-                enter: "دخول",
-                status: "SYSTEM ONLINE",
-                pageHeader: "OLKIE.PORTFOLIO",
-                n1:"// 01", h1:"مَن أنا؟",
-                c1:"اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!",
-                n2:"// 02", h2:"ألعابي ومجتمعي",
-                b1:"🎮 Itch.io", b2:"💬 Discord", b3:"🎥 YouTube",
-                n3:"// 03", h3:"الحسابات",
-                modeN:"NIGHT MODE", modeM:"MORNING MODE",
-                btnMode:"TOGGLE MODE", langSwitch:"EN", home:"🏠 الرئيسية", dir:"rtl"
+                enter: "دخول", status: "SYSTEM ONLINE", pageHeader: "OLKIE.PORTFOLIO",
+                n1:"// 01", h1:"مَن أنا؟", c1:"اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!",
+                n2:"// 02", h2:"ألعابي ومجتمعي", b1:"🎮 Itch.io", b2:"💬 Discord", b3:"🎥 YouTube",
+                n3:"// 03", h3:"الحسابات", modeN:"NIGHT", modeM:"MORNING", btnMode:"MODE", langSwitch:"EN", home:"🏠 HOME"
             },
             en: {
-                welcome: "OLKIE <span style='color:var(--neon);text-shadow:0 0 20px rgba(255,140,0,0.5)'>WORLD</span>",
+                welcome: "OLKIE <span>WORLD</span>",
                 words: ["Programmer","Designer","Game Creator"],
-                enter: "ENTER",
-                status: "SYSTEM ONLINE",
-                pageHeader: "OLKIE.PORTFOLIO",
-                n1:"// 01", h1:"Who Am I?",
-                c1:"My name is Olkie, a programmer and designer with several game projects I built from scratch. Hope you enjoy playing them!",
-                n2:"// 02", h2:"Games & Community",
-                b1:"🎮 Itch.io", b2:"💬 Discord", b3:"🎥 YouTube",
-                n3:"// 03", h3:"Accounts",
-                modeN:"NIGHT MODE", modeM:"MORNING MODE",
-                btnMode:"TOGGLE MODE", langSwitch:"عربي", home:"🏠 HOME", dir:"ltr"
+                enter: "ENTER", status: "SYSTEM ONLINE", pageHeader: "OLKIE.PORTFOLIO",
+                n1:"// 01", h1:"Who Am I?", c1:"My name is Olkie, a programmer and designer with several game projects.",
+                n2:"// 02", h2:"Games & Community", b1:"🎮 Itch.io", b2:"💬 Discord", b3:"🎥 YouTube",
+                n3:"// 03", h3:"Accounts", modeN:"NIGHT", modeM:"MORNING", btnMode:"MODE", langSwitch:"عربي", home:"🏠 HOME"
             }
         };
 
-        var currentLang = 'ar';
+        let currentLang = 'ar';
+        let typingTimeout, wordIndex = 0, charIndex = 0, isDeleting = false;
+        const typedEl = document.getElementById('typed-text');
 
-        // ==================== LOADER ====================
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                var loader = document.getElementById('loader');
-                loader.classList.add('hide');
-                setTimeout(function() { loader.style.display = 'none'; }, 500);
-            }, 500);
-        });
-
-        // ==================== TYPING EFFECT ====================
-        var typedEl = document.getElementById('typed-text');
-        var wordIndex = 0;
-        var charIndex = 0;
-        var isDeleting = false;
-        var typingTimeout;
-
+        // تأثير الكتابة المبسط
         function type() {
-            var words = T[currentLang].words;
-            var word = words[wordIndex];
+            const words = T[currentLang].words;
+            const word = words[wordIndex];
             isDeleting ? charIndex-- : charIndex++;
             typedEl.textContent = word.substring(0, charIndex);
-            var speed = isDeleting ? 70 : 120;
-            if (!isDeleting && charIndex === word.length) { speed = 1600; isDeleting = true; }
-            else if (isDeleting && charIndex === 0) { isDeleting = false; wordIndex = (wordIndex + 1) % words.length; speed = 350; }
+            let speed = isDeleting ? 60 : 100;
+            if (!isDeleting && charIndex === word.length) { speed = 1500; isDeleting = true; }
+            else if (isDeleting && charIndex === 0) { isDeleting = false; wordIndex = (wordIndex + 1) % words.length; speed = 300; }
             typingTimeout = setTimeout(type, speed);
         }
         type();
 
-        // ==================== LANGUAGE SWITCH ====================
+        // تبديل اللغة
         function toggleLanguage() {
             currentLang = currentLang === 'ar' ? 'en' : 'ar';
             localStorage.setItem('olkie_lang', currentLang);
-            var d = T[currentLang];
-            document.documentElement.dir = d.dir;
-            document.documentElement.lang = currentLang;
+            const d = T[currentLang];
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
             document.getElementById('welcomeText').innerHTML = d.welcome;
             document.getElementById('enterBtn').querySelector('span').textContent = d.enter;
             document.getElementById('statusLabel').textContent = d.status;
@@ -736,147 +450,98 @@
             updateModeText();
         }
 
-        // ==================== MODE ====================
+        // تبديل الوضع
         function toggleMode() {
             document.body.classList.toggle('morning');
-            matrixColor = document.body.classList.contains('morning') ? '#4da6ff' : '#ff8c00';
             localStorage.setItem('olkie_mode', document.body.classList.contains('morning') ? 'morning' : 'night');
             updateModeText();
         }
 
         function updateModeText() {
-            var isMorning = document.body.classList.contains('morning');
+            const isMorning = document.body.classList.contains('morning');
             document.getElementById('modeStatus').textContent = isMorning ? T[currentLang].modeM : T[currentLang].modeN;
         }
 
-        // ==================== SOUND EFFECT (simple beep) ====================
-        function playClickSound() {
-            try {
-                var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                var oscillator = audioCtx.createOscillator();
-                var gainNode = audioCtx.createGain();
-                oscillator.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                oscillator.frequency.value = 880;
-                gainNode.gain.value = 0.1;
-                oscillator.start();
-                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
-                oscillator.stop(audioCtx.currentTime + 0.3);
-                audioCtx.resume();
-            } catch(e) { console.log('Audio not supported'); }
-        }
-
-        // ==================== OPEN WORLD ====================
+        // فتح العالم
         function openWorld() {
-            playClickSound();
-            var ws = document.getElementById('welcome-screen');
-            ws.classList.add('hiding');
-            setTimeout(function() {
-                ws.style.display = 'none';
-                var c = document.getElementById('main-content');
-                c.classList.add('visible');
+            document.getElementById('welcome-screen').classList.add('hiding');
+            setTimeout(() => {
+                document.getElementById('welcome-screen').style.display = 'none';
+                document.getElementById('main-content').classList.add('visible');
                 document.getElementById('controls').style.display = 'flex';
-            }, 800);
+            }, 500);
         }
 
-        // ==================== BACK TO WELCOME ====================
+        // العودة للشاشة الرئيسية
         function backToWelcome() {
-            playClickSound();
             document.getElementById('main-content').classList.remove('visible');
             document.getElementById('controls').style.display = 'none';
-            var ws = document.getElementById('welcome-screen');
+            const ws = document.getElementById('welcome-screen');
             ws.style.display = 'flex';
             ws.classList.remove('hiding');
         }
 
-        // ==================== CARDS ====================
+        // تبديل البطاقات
         function toggleCard(header) {
-            var card = header.parentElement;
-            var icon = header.querySelector('.toggle-icon');
-            document.querySelectorAll('.card').forEach(function(c) {
+            const card = header.parentElement;
+            const icon = header.querySelector('.toggle-icon');
+            document.querySelectorAll('.card').forEach(c => {
                 if (c !== card) {
                     c.classList.remove('active');
-                    var otherIcon = c.querySelector('.toggle-icon');
+                    const otherIcon = c.querySelector('.toggle-icon');
                     if (otherIcon) otherIcon.textContent = '+';
                 }
             });
-            var active = card.classList.toggle('active');
+            const active = card.classList.toggle('active');
             icon.textContent = active ? '×' : '+';
         }
 
-        // ==================== MATRIX EFFECT (optimized) ====================
-        var canvas = document.getElementById('matrix-canvas');
-        var ctx = canvas.getContext('2d');
-        var matrixColor = '#ff8c00';
-        var chars = "OLKIE01";
-        var fontSize = 13;
-        var drops = [];
-        var animationId;
+        // خلفية المصفوفة المبسطة (أخف)
+        const canvas = document.getElementById('matrix-canvas');
+        let ctx = canvas.getContext('2d');
+        let chars = "01";
+        let fontSize = 12;
+        let drops = [];
+        let animationId;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            const cols = Math.floor(canvas.width / fontSize);
             drops = [];
-            var cols = Math.floor(canvas.width / fontSize);
-            for (var i = 0; i < cols; i++) drops.push(Math.random() * -80);
+            for (let i = 0; i < cols; i++) drops.push(Math.random() * -50);
         }
 
         function drawMatrix() {
-            ctx.fillStyle = 'rgba(0,0,0,0.07)';
+            ctx.fillStyle = 'rgba(0,0,0,0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = matrixColor;
+            ctx.fillStyle = '#ff8c00';
             ctx.font = fontSize + 'px monospace';
-            for (var i = 0; i < drops.length; i++) {
+            for (let i = 0; i < drops.length; i++) {
                 ctx.fillText(chars.charAt(Math.floor(Math.random() * chars.length)), i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) drops[i] = 0;
                 drops[i]++;
             }
+            animationId = requestAnimationFrame(drawMatrix);
         }
 
-        function animateMatrix() {
-            drawMatrix();
-            animationId = requestAnimationFrame(animateMatrix);
-        }
+        // ربط الأزرار
+        document.getElementById('enterBtn').onclick = openWorld;
+        document.getElementById('langBtn').onclick = toggleLanguage;
+        document.getElementById('modeBtn').onclick = toggleMode;
+        document.getElementById('homeBtn').onclick = backToWelcome;
 
-        // ==================== LOAD SAVED SETTINGS ====================
-        function loadSavedSettings() {
-            var savedLang = localStorage.getItem('olkie_lang');
-            if (savedLang && savedLang !== currentLang) {
-                currentLang = savedLang;
-                var d = T[currentLang];
-                document.documentElement.dir = d.dir;
-                document.documentElement.lang = currentLang;
-                document.getElementById('welcomeText').innerHTML = d.welcome;
-                document.getElementById('enterBtn').querySelector('span').textContent = d.enter;
-                document.getElementById('statusLabel').textContent = d.status;
-                document.getElementById('pageHeaderTitle').textContent = d.pageHeader;
-                document.getElementById('n1').textContent = d.n1;
-                document.getElementById('h1').textContent = d.h1;
-                document.getElementById('c1').textContent = d.c1;
-                document.getElementById('n2').textContent = d.n2;
-                document.getElementById('h2').textContent = d.h2;
-                document.getElementById('b1').textContent = d.b1;
-                document.getElementById('b2').textContent = d.b2;
-                document.getElementById('b3').textContent = d.b3;
-                document.getElementById('n3').textContent = d.n3;
-                document.getElementById('h3').textContent = d.h3;
-                document.getElementById('modeBtn').textContent = d.btnMode;
-                document.getElementById('langBtn').textContent = d.langSwitch;
-                document.getElementById('homeBtn').innerHTML = d.home;
-                clearTimeout(typingTimeout);
-                charIndex = 0; isDeleting = false; wordIndex = 0;
-                typedEl.textContent = '';
-                type();
-            }
-            
-            var savedMode = localStorage.getItem('olkie_mode');
-            if (savedMode === 'morning') {
-                document.body.classList.add('morning');
-                matrixColor = '#4da6ff';
-                updateModeText();
-            }
-        }
+        // استعادة الإعدادات المحفوظة
+        const savedLang = localStorage.getItem('olkie_lang');
+        if (savedLang && savedLang !== currentLang) toggleLanguage();
+        const savedMode = localStorage.getItem('olkie_mode');
+        if (savedMode === 'morning') document.body.classList.add('morning');
+        updateModeText();
 
-        // ==================== INITIALIZE ====================
+        // بدء المصفوفة
         resizeCanvas();
-        window.addEventListener('resize
+        window.addEventListener('resize', resizeCanvas);
+        drawMatrix();
+    </script>
+</body>
+</html>
