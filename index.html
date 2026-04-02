@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="أولكي - مبرمج ومصمم ألعاب">
-    <meta name="author" content="Olkie">
     <title>عالم أولكي | Olkie World</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* تحسينات سريعة - تقليل التأثيرات الثقيلة */
         :root {
             --neon: #ff8c00;
             --neon2: #ff4500;
             --glow: rgba(255,140,0,0.35);
+            --glow-strong: rgba(255,140,0,0.6);
             --bg: #050505;
+            --bg2: #0a0a0a;
             --surface: rgba(18,18,18,0.92);
             --border: rgba(255,140,0,0.18);
             --border-hover: rgba(255,140,0,0.55);
@@ -22,7 +21,10 @@
             --text-mid: #b0a898;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
         body {
             min-height: 100vh;
             font-family: 'Cairo', sans-serif;
@@ -31,19 +33,41 @@
             overflow-x: hidden;
         }
 
-        /* إزالة الضوضاء الثقيلة */
-        body::before { display: none; }
+        /* ── NOISE OVERLAY ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.55;
+        }
 
-        /* خلفية المصفوفة مبسطة */
+        /* ── CANVAS ── */
         #matrix-canvas {
             position: fixed;
             inset: 0;
             z-index: 0;
-            opacity: 0.08;
+            opacity: 0.12;
             pointer-events: none;
         }
 
-        /* شاشة الترحيب */
+        /* ── GRID LINES BG ── */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255,140,0,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,140,0,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* ════════════════════════════
+           WELCOME SCREEN
+        ════════════════════════════ */
         #welcome-screen {
             position: fixed;
             inset: 0;
@@ -52,286 +76,492 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: var(--bg);
-            transition: opacity 0.5s ease;
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
-        #welcome-screen.hiding { opacity: 0; pointer-events: none; }
 
-        /* الصورة الرمزية */
+        #welcome-screen.hiding {
+            opacity: 0;
+            transform: scale(1.06);
+            pointer-events: none;
+        }
+
+        /* scan line animation on welcome */
+        #welcome-screen::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon), transparent);
+            animation: scan 4s linear infinite;
+            opacity: 0.4;
+        }
+
+        @keyframes scan {
+            0%   { top: 0%; }
+            100% { top: 100%; }
+        }
+
+        /* avatar */
         .avatar-frame {
             position: relative;
-            width: 120px;
-            height: 120px;
-            margin-bottom: 25px;
+            width: 140px;
+            height: 140px;
+            margin-bottom: 32px;
         }
+
+        .avatar-frame::before,
+        .avatar-frame::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            animation: orbit 3s linear infinite;
+        }
+
+        .avatar-frame::before {
+            inset: -10px;
+            border: 1px solid transparent;
+            border-top-color: var(--neon);
+            border-right-color: rgba(255,140,0,0.3);
+        }
+
+        .avatar-frame::after {
+            inset: -20px;
+            border: 1px solid transparent;
+            border-bottom-color: var(--neon2);
+            border-left-color: rgba(255,69,0,0.2);
+            animation-duration: 5s;
+            animation-direction: reverse;
+        }
+
+        @keyframes orbit {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
         .profile-img {
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             border: 2px solid var(--neon);
             object-fit: cover;
-            box-shadow: 0 0 20px rgba(255,140,0,0.25);
+            display: block;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 0 40px rgba(255,140,0,0.25), inset 0 0 20px rgba(255,140,0,0.05);
         }
 
+        /* corner decorations */
+        .corner-box {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+        }
+
+        .corner-box::before,
+        .corner-box::after {
+            content: '';
+            position: absolute;
+            background: var(--neon);
+        }
+
+        .corner-box::before { width: 100%; height: 1.5px; top: 0; }
+        .corner-box::after  { width: 1.5px; height: 100%; top: 0; }
+
+        .corner-tl { top: -24px; right: -24px; }
+        .corner-tr { top: -24px; left: -24px; transform: scaleX(-1); }
+        .corner-bl { bottom: -24px; right: -24px; transform: scaleY(-1); }
+        .corner-br { bottom: -24px; left: -24px; transform: scale(-1); }
+
+        /* welcome text */
         .welcome-name {
             font-family: 'Orbitron', monospace;
-            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            font-size: clamp(1.3rem, 4vw, 2rem);
             font-weight: 900;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.12em;
             color: var(--text);
-            margin-bottom: 10px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
         }
-        .welcome-name span { color: var(--neon); }
+
+        .welcome-name span {
+            color: var(--neon);
+            text-shadow: 0 0 20px var(--glow);
+        }
 
         .typing-wrapper {
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             color: var(--text-dim);
-            margin-bottom: 30px;
+            letter-spacing: 0.08em;
+            margin-bottom: 36px;
             height: 1.6em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            text-transform: uppercase;
         }
+
         #typed-text { color: var(--neon); font-weight: 600; }
+
         .cursor {
             display: inline-block;
             width: 2px;
             height: 0.9em;
             background: var(--neon);
             animation: blink 0.7s step-end infinite;
+            vertical-align: middle;
         }
-        @keyframes blink { 50% { opacity: 0; } }
 
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* enter button */
         .enter-btn {
-            width: 160px;
-            padding: 12px 0;
+            position: relative;
+            width: 180px;
+            padding: 14px 0;
             background: transparent;
             border: 1px solid var(--neon);
             color: var(--neon);
             font-family: 'Orbitron', monospace;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 700;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
             cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .enter-btn:hover {
-            background: var(--neon);
-            color: #000;
-            box-shadow: 0 0 20px rgba(255,140,0,0.4);
+            overflow: hidden;
+            transition: color 0.3s ease, box-shadow 0.3s ease;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
         }
 
+        .enter-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--neon);
+            transform: translateX(-105%);
+            transition: transform 0.35s ease;
+            z-index: 0;
+        }
+
+        .enter-btn:hover::before { transform: translateX(0); }
+        .enter-btn:hover {
+            color: #000;
+            box-shadow: 0 0 40px var(--glow-strong);
+        }
+
+        .enter-btn span { position: relative; z-index: 1; }
+
+        /* status bar */
         .status-bar {
             position: absolute;
-            bottom: 20px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             font-family: 'Orbitron', monospace;
-            font-size: 0.55rem;
+            font-size: 0.6rem;
             color: var(--text-dim);
+            letter-spacing: 0.15em;
             white-space: nowrap;
         }
+
         .status-dot {
-            width: 5px;
-            height: 5px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background: var(--neon);
-            animation: pulse 1.5s ease-in-out infinite;
+            box-shadow: 0 0 8px var(--neon);
+            animation: pulse-dot 1.5s ease-in-out infinite;
         }
-        @keyframes pulse { 50% { opacity: 0.4; } }
 
-        /* المحتوى الرئيسي */
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.4; transform: scale(0.7); }
+        }
+
+        /* ════════════════════════════
+           MAIN CONTENT
+        ════════════════════════════ */
         .main-container {
-            max-width: 650px;
+            max-width: 720px;
             margin: 0 auto;
-            padding: 40px 20px 100px;
+            padding: 52px 24px 130px;
             position: relative;
             z-index: 10;
             display: none;
         }
+
         .main-container.visible {
             display: block;
-            animation: fadeIn 0.5s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+            animation: fadeSlide 0.8s ease forwards;
         }
 
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* header bar */
         .page-header {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            margin-bottom: 30px;
-            padding-bottom: 12px;
+            margin-bottom: 40px;
+            padding-bottom: 16px;
             border-bottom: 1px solid var(--border);
         }
+
         .page-header-title {
             font-family: 'Orbitron', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.2em;
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
             color: var(--text-dim);
+            text-transform: uppercase;
         }
+
         .mode-badge {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 7px;
             font-family: 'Orbitron', monospace;
-            font-size: 0.58rem;
+            font-size: 0.62rem;
             color: var(--neon);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
         }
+
         .mode-badge-dot {
-            width: 4px;
-            height: 4px;
+            width: 5px;
+            height: 5px;
             border-radius: 50%;
             background: var(--neon);
+            box-shadow: 0 0 6px var(--neon);
         }
 
-        /* البطاقات */
+        /* ── CARDS ── */
         .card {
+            position: relative;
             background: var(--surface);
             border: 1px solid var(--border);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             overflow: hidden;
-            transition: all 0.2s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
         }
-        .card:hover { border-color: var(--border-hover); }
-        .card.active { border-color: rgba(255,140,0,0.4); }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px;
+            height: 0;
+            background: linear-gradient(to bottom, var(--neon), var(--neon2));
+            transition: height 0.4s ease;
+        }
+
+        .card:hover::before,
+        .card.active::before { height: 100%; }
+
+        .card:hover {
+            border-color: var(--border-hover);
+            box-shadow: 0 0 30px rgba(255,140,0,0.07), inset 0 0 30px rgba(255,140,0,0.02);
+        }
+
+        .card.active {
+            border-color: rgba(255,140,0,0.45);
+            box-shadow: 0 0 40px rgba(255,140,0,0.1), inset 0 0 40px rgba(255,140,0,0.03);
+        }
 
         .card-header {
-            padding: 15px 20px;
+            padding: 20px 24px;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            user-select: none;
+            transition: background 0.2s ease;
         }
+
+        .card-header:hover { background: rgba(255,140,0,0.03); }
+
         .card-num {
             font-family: 'Orbitron', monospace;
-            font-size: 0.55rem;
+            font-size: 0.62rem;
             color: var(--neon);
+            letter-spacing: 0.2em;
+            margin-bottom: 3px;
             display: block;
             opacity: 0.7;
         }
-        .card-title { font-size: 0.95rem; font-weight: 700; }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: 0.03em;
+        }
+
         .toggle-icon {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             border: 1px solid var(--border-hover);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--neon);
-            transition: all 0.25s ease;
+            transition: transform 0.35s ease, background 0.25s ease, border-color 0.25s ease;
+            flex-shrink: 0;
+            clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
         }
+
         .card.active .toggle-icon {
             transform: rotate(45deg);
             background: var(--neon);
             color: #000;
+            border-color: var(--neon);
         }
+
         .card-content {
             overflow: hidden;
             max-height: 0;
-            transition: max-height 0.35s ease;
-            padding: 0 20px;
+            transition: max-height 0.45s ease, padding 0.3s ease;
+            padding: 0 24px;
             color: var(--text-mid);
-            line-height: 1.8;
-            font-size: 0.9rem;
-        }
-        .card.active .card-content {
-            max-height: 300px;
-            padding: 12px 20px 20px;
-            border-top: 1px solid var(--border);
+            line-height: 2;
+            font-size: 0.95rem;
+            border-top: 1px solid transparent;
         }
 
-        /* الروابط */
+        .card.active .card-content {
+            max-height: 400px;
+            padding: 16px 24px 24px;
+            border-top-color: var(--border);
+        }
+
+        /* ── LINKS ── */
         .links-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
         }
+
         .btn-link {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
+            gap: 8px;
+            padding: 10px 20px;
             border: 1px solid var(--border);
             background: rgba(255,140,0,0.04);
             color: var(--text-mid);
             text-decoration: none;
-            font-size: 0.85rem;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.88rem;
             font-weight: 600;
-            transition: all 0.2s ease;
-        }
-        .btn-link:hover {
-            background: var(--neon);
-            color: #000;
-            transform: translateY(-1px);
+            letter-spacing: 0.03em;
+            transition: all 0.25s ease;
+            clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
         }
 
-        /* أزرار التحكم */
+        .btn-link:hover {
+            background: var(--neon);
+            border-color: var(--neon);
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255,140,0,0.3);
+        }
+
+        /* ════════════════════════════
+           CONTROLS
+        ════════════════════════════ */
         .controls {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            bottom: 0; left: 0; right: 0;
             z-index: 500;
-            padding: 10px 20px;
+            padding: 14px 24px;
             display: none;
-            gap: 8px;
-            background: linear-gradient(to top, rgba(5,5,5,0.98), transparent);
-            backdrop-filter: blur(5px);
+            gap: 10px;
+            background: linear-gradient(to top, rgba(5,5,5,0.98) 50%, transparent);
+            -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(6px);
         }
+
         .control-btn {
             flex: 1;
-            padding: 8px 12px;
+            padding: 11px 14px;
             border: 1px solid var(--border);
             background: rgba(10,10,10,0.95);
             color: var(--text-mid);
             font-family: 'Orbitron', monospace;
-            font-size: 0.6rem;
+            font-size: 0.68rem;
             font-weight: 700;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
+            clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
         }
+
         .control-btn:hover {
             border-color: var(--neon);
             color: var(--neon);
+            background: rgba(255,140,0,0.06);
+            box-shadow: 0 0 20px rgba(255,140,0,0.1);
         }
 
-        /* وضع الصباح */
-        body.morning { --bg:#0b1624; --surface:rgba(10,22,40,0.92); --text:#ddeeff; --text-dim:#5a7a99; --text-mid:#8aaabb; }
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,140,0,0.3); }
 
+        /* ── RESPONSIVE ── */
         @media (max-width: 480px) {
-            .main-container { padding: 30px 15px 90px; }
-            .card-header { padding: 12px 15px; }
-            .btn-link { padding: 6px 12px; font-size: 0.8rem; width: 100%; justify-content: center; }
+            .main-container { padding: 36px 16px 120px; }
+            .card-header { padding: 16px 18px; }
+            .card.active .card-content { padding: 14px 18px 20px; }
+            .welcome-name { letter-spacing: 0.06em; }
         }
     </style>
 </head>
 <body>
 
+    <div class="grid-bg"></div>
     <canvas id="matrix-canvas"></canvas>
 
-    <!-- شاشة الترحيب -->
+    <!-- ══ WELCOME ══ -->
     <div id="welcome-screen">
         <div class="avatar-frame">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='60' fill='%23ff8c00'/%3E%3Ctext x='60' y='78' text-anchor='middle' fill='%23000' font-size='48' font-weight='bold' font-family='Arial'%3EOL%3C/text%3E%3C/svg%3E" 
-                 class="profile-img" alt="Olkie">
+            <div class="corner-box corner-tl"></div>
+            <div class="corner-box corner-tr"></div>
+            <div class="corner-box corner-bl"></div>
+            <div class="corner-box corner-br"></div>
+            <img src="olkie.jpg" class="profile-img" alt="Olkie"
+                 onerror="this.src='https://ui-avatars.com/api/?name=OL&background=ff8c00&color=000&size=200&bold=true'">
         </div>
+
         <div class="welcome-name" id="welcomeText">OLKIE <span>WORLD</span></div>
+
         <div class="typing-wrapper">
             <span id="typed-text"></span><span class="cursor"></span>
         </div>
-        <button class="enter-btn" id="enterBtn"><span>دخول</span></button>
+
+        <button class="enter-btn" id="enterBtn" onclick="openWorld()">
+            <span>دخول</span>
+        </button>
+
         <div class="status-bar">
             <div class="status-dot"></div>
             <span id="statusLabel">SYSTEM ONLINE</span>
         </div>
     </div>
 
-    <!-- المحتوى الرئيسي -->
+    <!-- ══ MAIN ══ -->
     <div class="main-container" id="main-content">
+
         <div class="page-header">
             <div class="page-header-title" id="pageHeaderTitle">OLKIE.PORTFOLIO</div>
             <div class="mode-badge">
@@ -342,90 +572,116 @@
 
         <div class="card">
             <div class="card-header" onclick="toggleCard(this)">
-                <div><span class="card-num" id="n1">// 01</span><span class="card-title" id="h1">مَن أنا؟</span></div>
+                <div>
+                    <span class="card-num" id="n1">// 01</span>
+                    <span class="card-title" id="h1">مَن أنا؟</span>
+                </div>
                 <div class="toggle-icon">+</div>
             </div>
-            <div class="card-content"><p id="c1">اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!</p></div>
+            <div class="card-content">
+                <p id="c1">اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!</p>
+            </div>
         </div>
 
         <div class="card">
             <div class="card-header" onclick="toggleCard(this)">
-                <div><span class="card-num" id="n2">// 02</span><span class="card-title" id="h2">ألعابي ومجتمعي</span></div>
+                <div>
+                    <span class="card-num" id="n2">// 02</span>
+                    <span class="card-title" id="h2">ألعابي ومجتمعي</span>
+                </div>
                 <div class="toggle-icon">+</div>
             </div>
             <div class="card-content">
                 <div class="links-grid">
                     <a href="https://olkie-1.itch.io/" target="_blank" class="btn-link" id="b1">🎮 Itch.io</a>
-                    <a href="https://discord.gg/" target="_blank" class="btn-link" id="b2">💬 Discord</a>
-                    <a href="https://youtube.com/" target="_blank" class="btn-link" id="b3">🎥 YouTube</a>
+                    <a href="https://discord.com/channels/1252787684947005552/1253135065865519135" target="_blank" class="btn-link" id="b2">💬 Discord</a>
+                    <a href="https://youtube.com/@_olkie?si=kEObA2_kbXdKUb6t" target="_blank" class="btn-link" id="b3">🎥 YouTube</a>
                 </div>
             </div>
         </div>
 
         <div class="card">
             <div class="card-header" onclick="toggleCard(this)">
-                <div><span class="card-num" id="n3">// 03</span><span class="card-title" id="h3">الحسابات</span></div>
+                <div>
+                    <span class="card-num" id="n3">// 03</span>
+                    <span class="card-title" id="h3">الحسابات</span>
+                </div>
                 <div class="toggle-icon">+</div>
             </div>
             <div class="card-content">
                 <div class="links-grid">
-                    <a href="#" target="_blank" class="btn-link">💼 LinkedIn</a>
+                    <a href="https://www.linkedin.com/in/olkie-اولكي-7bb798370" target="_blank" class="btn-link">💼 LinkedIn</a>
                 </div>
             </div>
         </div>
+
     </div>
 
-    <!-- أزرار التحكم -->
+    <!-- ══ CONTROLS ══ -->
     <div class="controls" id="controls">
-        <button class="control-btn" id="langBtn">EN</button>
-        <button class="control-btn" id="modeBtn">MODE</button>
-        <button class="control-btn" id="homeBtn">🏠 HOME</button>
+        <button class="control-btn" onclick="toggleLanguage()" id="langBtn">EN</button>
+        <button class="control-btn" onclick="toggleMode()" id="modeBtn">TOGGLE MODE</button>
     </div>
 
     <script>
-        // البيانات
-        const T = {
+        var T = {
             ar: {
-                welcome: "OLKIE <span>WORLD</span>",
+                welcome: "OLKIE <span style='color:var(--neon);text-shadow:0 0 20px rgba(255,140,0,0.5)'>WORLD</span>",
                 words: ["مبرمج", "مصمم", "صانع ألعاب"],
-                enter: "دخول", status: "SYSTEM ONLINE", pageHeader: "OLKIE.PORTFOLIO",
-                n1:"// 01", h1:"مَن أنا؟", c1:"اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!",
-                n2:"// 02", h2:"ألعابي ومجتمعي", b1:"🎮 Itch.io", b2:"💬 Discord", b3:"🎥 YouTube",
-                n3:"// 03", h3:"الحسابات", modeN:"NIGHT", modeM:"MORNING", btnMode:"MODE", langSwitch:"EN", home:"🏠 HOME"
+                enter: "دخول",
+                status: "SYSTEM ONLINE",
+                pageHeader: "OLKIE.PORTFOLIO",
+                n1:"// 01", h1:"مَن أنا؟",
+                c1:"اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!",
+                n2:"// 02", h2:"ألعابي ومجتمعي",
+                b1:"🎮 Itch.io", b2:"💬 Discord", b3:"🎥 YouTube",
+                n3:"// 03", h3:"الحسابات",
+                modeN:"NIGHT MODE", modeM:"MORNING MODE",
+                btnMode:"TOGGLE MODE", langSwitch:"EN", dir:"rtl"
             },
             en: {
-                welcome: "OLKIE <span>WORLD</span>",
+                welcome: "OLKIE <span style='color:var(--neon);text-shadow:0 0 20px rgba(255,140,0,0.5)'>WORLD</span>",
                 words: ["Programmer","Designer","Game Creator"],
-                enter: "ENTER", status: "SYSTEM ONLINE", pageHeader: "OLKIE.PORTFOLIO",
-                n1:"// 01", h1:"Who Am I?", c1:"My name is Olkie, a programmer and designer with several game projects.",
-                n2:"// 02", h2:"Games & Community", b1:"🎮 Itch.io", b2:"💬 Discord", b3:"🎥 YouTube",
-                n3:"// 03", h3:"Accounts", modeN:"NIGHT", modeM:"MORNING", btnMode:"MODE", langSwitch:"عربي", home:"🏠 HOME"
+                enter: "ENTER",
+                status: "SYSTEM ONLINE",
+                pageHeader: "OLKIE.PORTFOLIO",
+                n1:"// 01", h1:"Who Am I?",
+                c1:"My name is Olkie, a programmer and designer with several game projects I built from scratch. Hope you enjoy playing them!",
+                n2:"// 02", h2:"Games & Community",
+                b1:"🎮 Itch.io", b2:"💬 Discord", b3:"🎥 YouTube",
+                n3:"// 03", h3:"Accounts",
+                modeN:"NIGHT MODE", modeM:"MORNING MODE",
+                btnMode:"TOGGLE MODE", langSwitch:"عربي", dir:"ltr"
             }
         };
 
-        let currentLang = 'ar';
-        let typingTimeout, wordIndex = 0, charIndex = 0, isDeleting = false;
-        const typedEl = document.getElementById('typed-text');
+        var currentLang = 'ar';
 
-        // تأثير الكتابة المبسط
+        /* ── TYPING ── */
+        var typedEl = document.getElementById('typed-text');
+        var wordIndex = 0;
+        var charIndex = 0;
+        var isDeleting = false;
+        var typingTimeout;
+
         function type() {
-            const words = T[currentLang].words;
-            const word = words[wordIndex];
+            var words = T[currentLang].words;
+            var word = words[wordIndex];
             isDeleting ? charIndex-- : charIndex++;
             typedEl.textContent = word.substring(0, charIndex);
-            let speed = isDeleting ? 60 : 100;
-            if (!isDeleting && charIndex === word.length) { speed = 1500; isDeleting = true; }
-            else if (isDeleting && charIndex === 0) { isDeleting = false; wordIndex = (wordIndex + 1) % words.length; speed = 300; }
+            var speed = isDeleting ? 70 : 120;
+            if (!isDeleting && charIndex === word.length) { speed = 1600; isDeleting = true; }
+            else if (isDeleting && charIndex === 0) { isDeleting = false; wordIndex = (wordIndex + 1) % words.length; speed = 350; }
             typingTimeout = setTimeout(type, speed);
         }
         type();
 
-        // تبديل اللغة
+        /* ── LANGUAGE ── */
         function toggleLanguage() {
             currentLang = currentLang === 'ar' ? 'en' : 'ar';
-            localStorage.setItem('olkie_lang', currentLang);
-            const d = T[currentLang];
-            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            var d = T[currentLang];
+            document.documentElement.dir = d.dir;
+            document.documentElement.lang = currentLang;
             document.getElementById('welcomeText').innerHTML = d.welcome;
             document.getElementById('enterBtn').querySelector('span').textContent = d.enter;
             document.getElementById('statusLabel').textContent = d.status;
@@ -442,7 +698,6 @@
             document.getElementById('h3').textContent = d.h3;
             document.getElementById('modeBtn').textContent = d.btnMode;
             document.getElementById('langBtn').textContent = d.langSwitch;
-            document.getElementById('homeBtn').innerHTML = d.home;
             clearTimeout(typingTimeout);
             charIndex = 0; isDeleting = false; wordIndex = 0;
             typedEl.textContent = '';
@@ -450,98 +705,80 @@
             updateModeText();
         }
 
-        // تبديل الوضع
+        /* ── MODE ── */
         function toggleMode() {
             document.body.classList.toggle('morning');
-            localStorage.setItem('olkie_mode', document.body.classList.contains('morning') ? 'morning' : 'night');
+            matrixColor = document.body.classList.contains('morning') ? '#4da6ff' : '#ff8c00';
             updateModeText();
         }
 
         function updateModeText() {
-            const isMorning = document.body.classList.contains('morning');
+            var isMorning = document.body.classList.contains('morning');
             document.getElementById('modeStatus').textContent = isMorning ? T[currentLang].modeM : T[currentLang].modeN;
         }
 
-        // فتح العالم
+        /* morning overrides */
+        var styleTag = document.createElement('style');
+        styleTag.textContent = 'body.morning { --bg:#0b1624; --bg2:#0d1e30; --surface:rgba(10,22,40,0.92); --text:#ddeeff; --text-dim:#5a7a99; --text-mid:#8aaabb; }';
+        document.head.appendChild(styleTag);
+
+        /* ── ENTER ── */
         function openWorld() {
-            document.getElementById('welcome-screen').classList.add('hiding');
-            setTimeout(() => {
-                document.getElementById('welcome-screen').style.display = 'none';
-                document.getElementById('main-content').classList.add('visible');
+            var ws = document.getElementById('welcome-screen');
+            ws.classList.add('hiding');
+            setTimeout(function() {
+                ws.style.display = 'none';
+                var c = document.getElementById('main-content');
+                c.classList.add('visible');
                 document.getElementById('controls').style.display = 'flex';
-            }, 500);
+            }, 800);
         }
 
-        // العودة للشاشة الرئيسية
-        function backToWelcome() {
-            document.getElementById('main-content').classList.remove('visible');
-            document.getElementById('controls').style.display = 'none';
-            const ws = document.getElementById('welcome-screen');
-            ws.style.display = 'flex';
-            ws.classList.remove('hiding');
-        }
-
-        // تبديل البطاقات
+        /* ── CARDS ── */
         function toggleCard(header) {
-            const card = header.parentElement;
-            const icon = header.querySelector('.toggle-icon');
-            document.querySelectorAll('.card').forEach(c => {
+            var card = header.parentElement;
+            var icon = header.querySelector('.toggle-icon');
+            document.querySelectorAll('.card').forEach(function(c) {
                 if (c !== card) {
                     c.classList.remove('active');
-                    const otherIcon = c.querySelector('.toggle-icon');
-                    if (otherIcon) otherIcon.textContent = '+';
+                    c.querySelector('.toggle-icon').textContent = '+';
                 }
             });
-            const active = card.classList.toggle('active');
+            var active = card.classList.toggle('active');
             icon.textContent = active ? '×' : '+';
         }
 
-        // خلفية المصفوفة المبسطة (أخف)
-        const canvas = document.getElementById('matrix-canvas');
-        let ctx = canvas.getContext('2d');
-        let chars = "01";
-        let fontSize = 12;
-        let drops = [];
-        let animationId;
+        /* ── MATRIX ── */
+        var canvas = document.getElementById('matrix-canvas');
+        var ctx = canvas.getContext('2d');
+        var matrixColor = '#ff8c00';
+        var chars = "OLKIE01";
+        var fontSize = 13;
+        var drops = [];
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            const cols = Math.floor(canvas.width / fontSize);
             drops = [];
-            for (let i = 0; i < cols; i++) drops.push(Math.random() * -50);
+            var cols = Math.floor(canvas.width / fontSize);
+            for (var i = 0; i < cols; i++) drops.push(Math.random() * -80);
         }
 
         function drawMatrix() {
-            ctx.fillStyle = 'rgba(0,0,0,0.05)';
+            ctx.fillStyle = 'rgba(0,0,0,0.07)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#ff8c00';
+            ctx.fillStyle = matrixColor;
             ctx.font = fontSize + 'px monospace';
-            for (let i = 0; i < drops.length; i++) {
+            for (var i = 0; i < drops.length; i++) {
                 ctx.fillText(chars.charAt(Math.floor(Math.random() * chars.length)), i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) drops[i] = 0;
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             }
-            animationId = requestAnimationFrame(drawMatrix);
         }
 
-        // ربط الأزرار
-        document.getElementById('enterBtn').onclick = openWorld;
-        document.getElementById('langBtn').onclick = toggleLanguage;
-        document.getElementById('modeBtn').onclick = toggleMode;
-        document.getElementById('homeBtn').onclick = backToWelcome;
-
-        // استعادة الإعدادات المحفوظة
-        const savedLang = localStorage.getItem('olkie_lang');
-        if (savedLang && savedLang !== currentLang) toggleLanguage();
-        const savedMode = localStorage.getItem('olkie_mode');
-        if (savedMode === 'morning') document.body.classList.add('morning');
-        updateModeText();
-
-        // بدء المصفوفة
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
-        drawMatrix();
+        setInterval(drawMatrix, 40);
     </script>
 </body>
 </html>
