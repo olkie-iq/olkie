@@ -4,37 +4,549 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>عالم أولكي | Olkie World</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-orange: #ff8c00;
-            --dark-bg: #000000;
-            --morning-bg: #2196f3;
-            --glass: rgba(255, 140, 0, 0.1);
+            --neon: #ff8c00;
+            --neon-dim: rgba(255, 140, 0, 0.15);
+            --neon-glow: rgba(255, 140, 0, 0.4);
+            --bg: #000000;
+            --surface: rgba(10, 10, 10, 0.85);
+            --text: #f0f0f0;
+            --text-dim: #aaa;
+            --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        * { box-sizing: border-box; transition: all 0.3s ease; }
-        body, html { margin: 0; padding: 0; font-family: 'Cairo', sans-serif; overflow-x: hidden; min-height: 100vh; }
-        
-        body.night { background-color: var(--dark-bg); color: white; }
-        body.morning { background-color: var(--morning-bg); color: white; }
+        body.morning {
+            --bg: #0d1b2a;
+            --surface: rgba(8, 20, 40, 0.85);
+            --text: #e8f4ff;
+            --text-dim: #8ab4cc;
+        }
 
-        #matrix-canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.25; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* شاشة الترحيب - تم إصلاح الزر هنا */
+        html, body {
+            min-height: 100vh;
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            transition: background-color var(--transition), color var(--transition);
+        }
+
+        /* ===== CANVAS ===== */
+        #matrix-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            opacity: 0.18;
+            pointer-events: none;
+        }
+
+        /* ===== WELCOME SCREEN ===== */
         #welcome-screen {
-            position: fixed; width: 100%; height: 100vh; background: inherit;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000;
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            background: radial-gradient(ellipse at center, rgba(255,140,0,0.07) 0%, transparent 70%);
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
+
+        #welcome-screen.hiding {
+            opacity: 0;
+            transform: scale(1.04);
+            pointer-events: none;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            margin-bottom: 28px;
+        }
+
+        .avatar-ring {
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            border: 1.5px solid var(--neon);
+            animation: ring-pulse 2.4s ease-in-out infinite;
+        }
+
+        .avatar-ring:nth-child(2) {
+            inset: -16px;
+            border-color: rgba(255,140,0,0.35);
+            animation-delay: 0.6s;
+        }
+
+        @keyframes ring-pulse {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 0.2; transform: scale(1.05); }
+        }
+
         .profile-img {
-            width: 150px; height: 150px; border-radius: 50%;
-            border: 3px solid var(--neon-orange); box-shadow: 0 0 20px var(--neon-orange);
-            margin-bottom: 20px; object-fit: cover;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 2px solid var(--neon);
+            object-fit: cover;
+            display: block;
+            filter: saturate(1.1);
         }
-        
-        /* زر الدخول - العرض ثابت ومنتظم */
-        .enter-btn-fixed {
-            width: 200px !important;
+
+        #welcomeText {
+            font-size: clamp(1.4rem, 4vw, 2rem);
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 0.02em;
+            background: linear-gradient(135deg, #fff 30%, var(--neon));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-sub {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-bottom: 32px;
+            font-weight: 300;
+        }
+
+        .enter-btn {
+            position: relative;
+            padding: 13px 0;
+            width: 200px;
+            border-radius: 40px;
+            border: 1.5px solid var(--neon);
+            background: transparent;
+            color: var(--text);
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.05em;
+            overflow: hidden;
+            transition: color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .enter-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--neon);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.35s ease;
+            z-index: -1;
+        }
+
+        .enter-btn:hover::before { transform: scaleX(1); }
+        .enter-btn:hover {
+            color: #000;
+            box-shadow: 0 0 30px var(--neon-glow);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 48px 20px 120px;
+            position: relative;
+            z-index: 10;
+            display: none;
+            opacity: 0;
+        }
+
+        .main-container.visible {
+            display: block;
+            animation: slideUp 0.7s var(--transition) forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-title {
+            text-align: center;
+            color: var(--neon);
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            font-weight: 600;
+            margin-bottom: 36px;
+            letter-spacing: 0.06em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .page-title::before,
+        .page-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to left, var(--neon), transparent);
+        }
+
+        .page-title::after {
+            background: linear-gradient(to right, var(--neon), transparent);
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--surface);
+            border: 1px solid rgba(255,140,0,0.12);
+            border-radius: 14px;
+            margin-bottom: 14px;
+            backdrop-filter: blur(16px);
+            overflow: hidden;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(255,140,0,0.4);
+            box-shadow: 0 4px 32px rgba(255,140,0,0.08);
+        }
+
+        .card.active {
+            border-color: rgba(255,140,0,0.5);
+            box-shadow: 0 4px 32px rgba(255,140,0,0.12);
+        }
+
+        .card-header {
+            padding: 18px 22px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--neon);
+            font-weight: 700;
+            font-size: 1.05rem;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+
+        .card-header:hover { background: rgba(255,140,0,0.05); }
+
+        .toggle-icon {
+            width: 24px;
+            height: 24px;
+            border: 1.5px solid var(--neon);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: transform 0.35s ease, background 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .card.active .toggle-icon {
+            transform: rotate(45deg);
+            background: var(--neon);
+            color: #000;
+        }
+
+        .card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.45s ease, padding 0.3s ease;
+            padding: 0 22px;
+            color: var(--text-dim);
+            line-height: 1.9;
+            font-size: 0.97rem;
+        }
+
+        .card.active .card-content {
+            max-height: 500px;
+            padding: 4px 22px 22px;
+        }
+
+        /* ===== LINKS ===== */
+        .links-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 4px 0;
+        }
+
+        .btn-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 18px;
+            border: 1px solid rgba(255,140,0,0.4);
+            border-radius: 8px;
+            background: rgba(255,140,0,0.06);
+            color: var(--text);
+            text-decoration: none;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background 0.25s ease, border-color 0.25s ease,
+                        color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+        }
+
+        .btn-link:hover {
+            background: var(--neon);
+            border-color: var(--neon);
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,140,0,0.3);
+        }
+
+        /* ===== CONTROLS ===== */
+        .controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 200;
+            padding: 12px 20px;
+            display: flex;
+            gap: 10px;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 60%, transparent);
+            backdrop-filter: blur(4px);
+        }
+
+        .control-btn, .lang-select {
+            flex: 1;
+            padding: 11px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,140,0,0.35);
+            background: rgba(5,5,5,0.9);
+            color: var(--text);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 0.25s ease, background 0.25s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            text-align: center;
+        }
+
+        .control-btn:hover, .lang-select:hover {
+            border-color: var(--neon);
+            background: rgba(255,140,0,0.08);
+        }
+
+        .lang-select option { background: #111; }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,140,0,0.35); border-radius: 3px; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .main-container { padding: 32px 14px 110px; }
+            .card-header { font-size: 0.97rem; padding: 15px 16px; }
+            .card-content { padding: 0 16px; font-size: 0.93rem; }
+            .card.active .card-content { padding: 4px 16px 18px; }
+        }
+    </style>
+</head>
+<body class="night">
+
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- شاشة الترحيب -->
+    <div id="welcome-screen">
+        <div class="avatar-wrapper">
+            <div class="avatar-ring"></div>
+            <div class="avatar-ring"></div>
+            <img src="olkie.jpg" class="profile-img" alt="Olkie"
+                 onerror="this.src='https://ui-avatars.com/api/?name=Olkie&background=ff8c00&color=fff&size=200'">
+        </div>
+        <div id="welcomeText">أهلاً في عالم أولكي</div>
+        <div class="welcome-sub" id="welcomeSub">مبرمج · مصمم · صانع ألعاب</div>
+        <button class="enter-btn" id="enterBtn" onclick="openWorld()">دخول</button>
+    </div>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="main-container" id="main-content">
+
+        <h1 class="page-title" id="modeStatus">الوضع الليلي</h1>
+
+        <div class="card" id="card1">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span id="h1">01. مَن أنا؟</span>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="card-content">
+                <p id="c1">اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!</p>
+            </div>
+        </div>
+
+        <div class="card" id="card2">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span id="h2">02. ألعابي ومجتمعي</span>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="card-content">
+                <div class="links-grid">
+                    <a href="https://olkie-1.itch.io/" target="_blank" class="btn-link" id="b1">🎮 Itch.io</a>
+                    <a href="https://discord.com/channels/1252787684947005552/1253135065865519135" target="_blank" class="btn-link" id="b2">💬 Discord</a>
+                    <a href="https://youtube.com/@_olkie?si=kEObA2_kbXdKUb6t" target="_blank" class="btn-link" id="b3">🎥 YouTube</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="card3">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span id="h3">03. الحسابات</span>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="card-content">
+                <div class="links-grid">
+                    <a href="https://www.linkedin.com/in/olkie-اولكي-7bb798370" target="_blank" class="btn-link">💼 LinkedIn</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- أدوات التحكم -->
+    <div class="controls">
+        <select class="lang-select" id="langSelector" onchange="changeLanguage(this.value)">
+            <option value="ar">العربية 🇸🇦</option>
+            <option value="en">English 🇺🇸</option>
+        </select>
+        <button class="control-btn" onclick="toggleMode()" id="modeBtn">تبديل الوضع</button>
+    </div>
+
+    <script>
+        /* ===== الترجمات ===== */
+        const T = {
+            ar: {
+                welcome: "أهلاً في عالم أولكي",
+                sub: "مبرمج · مصمم · صانع ألعاب",
+                enter: "دخول",
+                h1: "01. مَن أنا؟",
+                c1: "اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!",
+                h2: "02. ألعابي ومجتمعي",
+                b1: "🎮 Itch.io", b2: "💬 Discord", b3: "🎥 YouTube",
+                h3: "03. الحسابات",
+                modeN: "الوضع الليلي", modeM: "الوضع الصبحي",
+                btnMode: "تبديل الوضع", dir: "rtl"
+            },
+            en: {
+                welcome: "Welcome to Olkie World",
+                sub: "Programmer · Designer · Game Creator",
+                enter: "Enter",
+                h1: "01. Who Am I?",
+                c1: "My name is Olkie, a programmer and designer with several game projects I built from scratch. Hope you enjoy playing them!",
+                h2: "02. Games & Community",
+                b1: "🎮 Itch.io", b2: "💬 Discord", b3: "🎥 YouTube",
+                h3: "03. Accounts",
+                modeN: "Night Mode", modeM: "Morning Mode",
+                btnMode: "Toggle Mode", dir: "ltr"
+            }
+        };
+
+        function changeLanguage(lang) {
+            const d = T[lang];
+            document.documentElement.lang = lang === 'ar' ? 'ar' : 'en';
+            document.documentElement.dir = d.dir;
+            document.getElementById('welcomeText').textContent = d.welcome;
+            document.getElementById('welcomeSub').textContent = d.sub;
+            document.getElementById('enterBtn').textContent = d.enter;
+            document.getElementById('h1').textContent = d.h1;
+            document.getElementById('c1').textContent = d.c1;
+            document.getElementById('h2').textContent = d.h2;
+            document.getElementById('h3').textContent = d.h3;
+            document.getElementById('b1').textContent = d.b1;
+            document.getElementById('b2').textContent = d.b2;
+            document.getElementById('b3').textContent = d.b3;
+            document.getElementById('modeBtn').textContent = d.btnMode;
+            updateModeText();
+        }
+
+        function toggleMode() {
+            document.body.classList.toggle('morning');
+            document.body.classList.toggle('night');
+            updateModeText();
+            // إعادة رسم canvas بلون يناسب الوضع
+            matrixColor = document.body.classList.contains('morning') ? '#4da6ff' : '#ff8c00';
+        }
+
+        function updateModeText() {
+            const isNight = document.body.classList.contains('night');
+            const lang = document.getElementById('langSelector').value;
+            document.getElementById('modeStatus').textContent = isNight ? T[lang].modeN : T[lang].modeM;
+        }
+
+        function openWorld() {
+            const ws = document.getElementById('welcome-screen');
+            ws.classList.add('hiding');
+            setTimeout(() => {
+                ws.style.display = 'none';
+                const content = document.getElementById('main-content');
+                content.classList.add('visible');
+            }, 600);
+        }
+
+        function toggleCard(header) {
+            const card = header.parentElement;
+            const icon = header.querySelector('.toggle-icon');
+            // أغلق بقية البطاقات
+            document.querySelectorAll('.card').forEach(c => {
+                if (c !== card) {
+                    c.classList.remove('active');
+                    c.querySelector('.toggle-icon').textContent = '+';
+                }
+            });
+            const isActive = card.classList.toggle('active');
+            icon.textContent = isActive ? '×' : '+';
+        }
+
+        /* ===== Matrix Canvas ===== */
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        let matrixColor = '#ff8c00';
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const chars = "OLKIE01▲▼◆";
+        const fontSize = 14;
+        let drops = [];
+
+        function initDrops() {
+            const cols = Math.floor(canvas.width / fontSize);
+            drops = Array.from({ length: cols }, () => Math.random() * -50);
+        }
+        initDrops();
+        window.addEventListener('resize', initDrops);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0,0,0,0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = matrixColor;
+            ctx.font = `${fontSize}px monospace`;
+            for (let i = 0; i < drops.length; i++) {
+                const char = chars[Math.floor(Math.random() * chars.length)];
+                ctx.globalAlpha = Math.random() * 0.6 + 0.4;
+                ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+            ctx.globalAlpha = 1;
+        }
+
+        setInterval(drawMatrix, 38);
+    </script>
+</body>
+</html>            width: 200px !important;
             padding: 12px 0;
             border-radius: 30px;
             border: 2px solid var(--neon-orange);
