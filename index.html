@@ -1,127 +1,108 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>عالم أولكي | Olkie World</title>
+<meta name="description" content="Olkie - Iraqi Game Developer, Programmer & Content Creator. Godot Engine games, programming projects, and more.">
+<meta name="keywords" content="Olkie, game developer, Iraqi programmer, Godot Engine, game development, مبرمج ألعاب عراقي, تطوير ألعاب">
+<meta property="og:title" content="Olkie World | Game Developer & Programmer">
+<meta property="og:description" content="Iraqi Game Developer & Content Creator — Godot, Python, Web Dev">
+<title>Olkie World | Game Developer</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <style>
 :root{
   --neon:#ff8c00;--neon2:#ff4500;--neon3:#ffb347;
-  --glow:rgba(255,140,0,0.3);
-  --bg:#040404;
-  --surface:rgba(14,14,14,0.94);--surface2:rgba(22,22,22,0.9);
+  --glow:rgba(255,140,0,0.3);--glow-s:rgba(255,140,0,0.55);
+  --bg:#040404;--surface:rgba(14,14,14,0.94);--surface2:rgba(22,22,22,0.9);
   --border:rgba(255,140,0,0.15);--border-h:rgba(255,140,0,0.5);
   --text:#ede8e0;--text-dim:#6a6560;--text-mid:#a09890;
+  --font-ar:'Cairo',sans-serif;--font-en:'Orbitron',monospace;
 }
 body.morning{
   --bg:#080f1a;--surface:rgba(10,20,36,0.94);--surface2:rgba(14,26,46,0.9);
-  --border:rgba(100,180,255,0.18);--border-h:rgba(100,180,255,0.5);
+  --border:rgba(100,180,255,0.2);--border-h:rgba(100,180,255,0.55);
   --text:#d8eeff;--text-dim:#3a5a7a;--text-mid:#7aaabb;
-  --neon:#4db8ff;--neon2:#0077cc;--neon3:#80ccff;--glow:rgba(77,184,255,0.3);
+  --neon:#4db8ff;--neon2:#0077cc;--neon3:#80ccff;--glow:rgba(77,184,255,0.3);--glow-s:rgba(77,184,255,0.55);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{
-  min-height:100vh;font-family:'Cairo',sans-serif;
-  background:var(--bg);color:var(--text);
-  overflow-x:hidden;transition:background 0.5s ease,color 0.5s ease;
-  cursor:none;
-}
+body{min-height:100vh;font-family:var(--font-ar);background:var(--bg);color:var(--text);overflow-x:hidden;transition:background 0.5s,color 0.5s;cursor:none;}
 
-/* ── NATURAL ARROW CURSOR ── */
-#cursor{
-  position:fixed;pointer-events:none;z-index:99999;
-  width:20px;height:20px;
-  transform:translate(0,0);
-  filter:drop-shadow(0 0 5px var(--neon)) drop-shadow(0 0 10px var(--glow));
-  transition:filter 0.3s ease,transform 0.1s ease;
-}
-#cursor svg path{fill:var(--neon);stroke:rgba(0,0,0,0.5);stroke-width:1px;}
-#cursor-ring{
-  position:fixed;width:36px;height:36px;
-  border:1px solid var(--neon);border-radius:50%;
-  pointer-events:none;z-index:99998;
-  transform:translate(-50%,-50%);
-  opacity:0.2;
-  transition:width 0.25s,height 0.25s,opacity 0.3s;
-}
+/* ── CURSOR ── */
+#cursor{position:fixed;pointer-events:none;z-index:99999;width:20px;height:24px;filter:drop-shadow(0 0 5px var(--neon));transition:filter 0.3s;}
+#cursor svg path{fill:var(--neon);}
+#cursor-ring{position:fixed;width:38px;height:38px;border:1px solid var(--neon);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);opacity:0.18;transition:width .25s,height .25s,opacity .3s;}
 
-/* ── NOISE ── */
-body::before{
-  content:'';position:fixed;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-  pointer-events:none;z-index:9998;opacity:0.6;
-}
-.grid-bg{
-  position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:linear-gradient(rgba(255,140,0,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,140,0,0.025) 1px,transparent 1px);
-  background-size:50px 50px;
-}
-body.morning .grid-bg{
-  background-image:linear-gradient(rgba(77,184,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(77,184,255,0.04) 1px,transparent 1px);
-}
-#matrix-canvas{position:fixed;inset:0;z-index:0;opacity:0.1;pointer-events:none;}
-#particles-canvas{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.6;}
+/* ── NOISE + GRID ── */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9998;opacity:0.5;}
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,140,0,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,140,0,0.022) 1px,transparent 1px);background-size:50px 50px;}
+body.morning .grid-bg{background-image:linear-gradient(rgba(77,184,255,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(77,184,255,0.035) 1px,transparent 1px);}
+#matrix-canvas{position:fixed;inset:0;z-index:0;opacity:0.09;pointer-events:none;}
+#particles-canvas{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.55;}
 
 /* ══ WELCOME ══ */
-#welcome-screen{
-  position:fixed;inset:0;z-index:1000;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  transition:opacity 0.9s ease,transform 0.9s ease;
-}
-#welcome-screen::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,transparent,var(--neon),transparent);
-  animation:scan 5s linear infinite;opacity:0.4;
-}
+#welcome-screen{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .9s ease,transform .9s ease;}
+#welcome-screen::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--neon),transparent);animation:scan 5s linear infinite;opacity:0.35;}
 @keyframes scan{0%{top:0;}100%{top:100%;}}
-#welcome-screen.hiding{opacity:0;transform:scale(1.08);pointer-events:none;}
+#welcome-screen.hiding{opacity:0;transform:scale(1.07);pointer-events:none;}
 
-.ui-corner{position:absolute;font-family:'Orbitron',monospace;font-size:0.55rem;color:var(--text-dim);letter-spacing:0.1em;opacity:0.45;}
+/* TERMINAL OVERLAY */
+#terminal{
+  position:absolute;inset:0;background:rgba(0,0,0,0.96);
+  display:none;flex-direction:column;z-index:10;
+  padding:30px;font-family:'Courier New',monospace;
+}
+#terminal.open{display:flex;}
+#terminal-output{flex:1;overflow-y:auto;font-size:0.82rem;color:#00ff41;line-height:1.7;margin-bottom:12px;}
+#terminal-output .t-line{opacity:0;animation:tline 0.1s forwards;}
+@keyframes tline{to{opacity:1;}}
+#terminal-input-row{display:flex;align-items:center;gap:8px;border-top:1px solid rgba(0,255,65,0.2);padding-top:12px;}
+#terminal-prompt{color:var(--neon);font-family:'Courier New',monospace;font-size:0.82rem;white-space:nowrap;}
+#terminal-input{flex:1;background:transparent;border:none;outline:none;color:#00ff41;font-family:'Courier New',monospace;font-size:0.82rem;caret-color:#00ff41;}
+#terminal-close{position:absolute;top:16px;right:16px;background:transparent;border:1px solid rgba(255,140,0,0.3);color:var(--neon);font-family:'Orbitron',monospace;font-size:0.6rem;padding:5px 10px;cursor:none;letter-spacing:0.1em;transition:all .2s;}
+#terminal-close:hover{background:var(--neon);color:#000;}
+
+.ui-corner{position:absolute;font-family:'Orbitron',monospace;font-size:0.55rem;color:var(--text-dim);letter-spacing:0.1em;opacity:0.45;cursor:none;}
 .ui-corner.tl{top:24px;right:24px;}.ui-corner.tr{top:24px;left:24px;}
 .ui-corner.bl{bottom:60px;right:24px;}.ui-corner.br{bottom:60px;left:24px;}
+.ui-corner.clickable{opacity:0.7;border-bottom:1px solid var(--neon);transition:opacity .2s;padding-bottom:1px;}
+.ui-corner.clickable:hover{opacity:1;}
 
 .avatar-frame{position:relative;width:150px;height:150px;margin-bottom:30px;}
 .avatar-frame::before,.avatar-frame::after{content:'';position:absolute;border-radius:50%;}
 .avatar-frame::before{inset:-12px;border:1px solid transparent;border-top-color:var(--neon);border-right-color:rgba(255,140,0,0.25);animation:orbit 3s linear infinite;}
-.avatar-frame::after{inset:-22px;border:1px solid transparent;border-bottom-color:var(--neon2);border-left-color:rgba(255,69,0,0.2);animation:orbit 5s linear infinite reverse;}
+.avatar-frame::after{inset:-22px;border:1px solid transparent;border-bottom-color:var(--neon2);animation:orbit 5s linear infinite reverse;}
 @keyframes orbit{to{transform:rotate(360deg);}}
-
 .corner-box{position:absolute;width:14px;height:14px;}
 .corner-box::before,.corner-box::after{content:'';position:absolute;background:var(--neon);}
 .corner-box::before{width:100%;height:1.5px;top:0;}.corner-box::after{width:1.5px;height:100%;top:0;}
 .corner-tl{top:-26px;right:-26px;}.corner-tr{top:-26px;left:-26px;transform:scaleX(-1);}
 .corner-bl{bottom:-26px;right:-26px;transform:scaleY(-1);}.corner-br{bottom:-26px;left:-26px;transform:scale(-1);}
-
-.profile-img{width:150px;height:150px;border-radius:50%;border:2px solid var(--neon);object-fit:cover;display:block;position:relative;z-index:1;box-shadow:0 0 50px var(--glow),0 0 100px rgba(255,140,0,0.08);}
-
+.profile-img{width:150px;height:150px;border-radius:50%;border:2px solid var(--neon);object-fit:cover;display:block;position:relative;z-index:1;box-shadow:0 0 50px var(--glow);}
 .welcome-name{font-family:'Orbitron',monospace;font-size:clamp(1.4rem,4vw,2.2rem);font-weight:900;letter-spacing:0.14em;color:var(--text);margin-bottom:6px;text-transform:uppercase;}
 .welcome-name span{color:var(--neon);text-shadow:0 0 25px var(--glow);}
-
 .typing-wrapper{font-size:0.82rem;color:var(--text-dim);letter-spacing:0.12em;margin-bottom:38px;height:1.6em;display:flex;align-items:center;justify-content:center;gap:4px;text-transform:uppercase;}
 #typed-text{color:var(--neon);font-weight:700;}
-.cursor{display:inline-block;width:2px;height:0.9em;background:var(--neon);animation:blink 0.7s step-end infinite;vertical-align:middle;}
+.cursor{display:inline-block;width:2px;height:0.9em;background:var(--neon);animation:blink .7s step-end infinite;vertical-align:middle;}
 @keyframes blink{50%{opacity:0;}}
 
-/* HEX BTN */
-.hex-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:transparent;border:none;cursor:none;font-family:'Orbitron',monospace;transition:color 0.3s ease,filter 0.3s ease;text-decoration:none;}
-.hex-btn .hb-bg{position:absolute;inset:0;border:1.5px solid var(--neon);background:transparent;clip-path:polygon(18px 0%,calc(100% - 18px) 0%,100% 50%,calc(100% - 18px) 100%,18px 100%,0% 50%);transition:background 0.3s ease,box-shadow 0.3s ease;}
+/* HEX BUTTON */
+.hex-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:transparent;border:none;cursor:none;font-family:'Orbitron',monospace;transition:color .3s,filter .3s;text-decoration:none;}
+.hex-btn .hb-bg{position:absolute;inset:0;border:1.5px solid var(--neon);background:transparent;clip-path:polygon(18px 0%,calc(100% - 18px) 0%,100% 50%,calc(100% - 18px) 100%,18px 100%,0% 50%);transition:background .3s,box-shadow .3s;}
 .hex-btn:hover .hb-bg{background:var(--neon);box-shadow:0 0 30px var(--glow);}
-.hex-btn:hover{filter:drop-shadow(0 0 16px var(--neon));}
+.hex-btn:hover{filter:drop-shadow(0 0 14px var(--neon));}
 .hex-btn .hb-txt{position:relative;z-index:1;}
-
 .enter-btn{width:220px;padding:16px 0;color:var(--neon);font-size:0.82rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;}
 .enter-btn:hover{color:#000;}
-
 .status-bar{position:absolute;bottom:30px;display:flex;align-items:center;gap:10px;font-family:'Orbitron',monospace;font-size:0.58rem;color:var(--text-dim);letter-spacing:0.15em;}
 .status-dot{width:6px;height:6px;border-radius:50%;background:var(--neon);box-shadow:0 0 8px var(--neon);animation:pdot 1.5s ease-in-out infinite;}
 @keyframes pdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.3;transform:scale(0.6);}}
 
 /* ══ MAIN ══ */
-.main-container{max-width:760px;margin:0 auto;padding:52px 24px 140px;position:relative;z-index:10;display:none;}
-.main-container.visible{display:block;animation:fadeSlide 0.8s ease forwards;}
-@keyframes fadeSlide{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+.main-container{max-width:780px;margin:0 auto;padding:52px 24px 140px;position:relative;z-index:10;display:none;}
+.main-container.visible{display:block;animation:fadeSlide .8s ease forwards;}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
 
 .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:44px;padding-bottom:16px;border-bottom:1px solid var(--border);}
 .page-logo{font-family:'Orbitron',monospace;font-size:1rem;font-weight:900;letter-spacing:0.15em;color:var(--neon);text-shadow:0 0 20px var(--glow);}
@@ -130,98 +111,146 @@ body.morning .grid-bg{
 .mode-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--neon);box-shadow:0 0 6px var(--neon);}
 
 .section-label{font-family:'Orbitron',monospace;font-size:0.58rem;letter-spacing:0.3em;color:var(--text-dim);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:12px;}
-.section-label::after{content:'';flex:1;height:1px;background:linear-gradient(to left,transparent,var(--border));}
-html[dir="ltr"] .section-label::after{background:linear-gradient(to right,transparent,var(--border));}
+.section-label::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,var(--border));}
+html[dir="rtl"] .section-label::after{background:linear-gradient(to left,transparent,var(--border));}
 
-.visitor-strip{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--surface);border:1px solid var(--border);margin-bottom:20px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));}
-.visitor-label{font-family:'Orbitron',monospace;font-size:0.58rem;letter-spacing:0.2em;color:var(--text-dim);}
-.visitor-count{font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:700;color:var(--neon);text-shadow:0 0 15px var(--glow);letter-spacing:0.15em;}
+/* VISITOR — FIXED */
+.visitor-strip{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:var(--surface);border:1px solid var(--border);margin-bottom:20px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));}
+.visitor-label{font-family:'Orbitron',monospace;font-size:0.55rem;letter-spacing:0.18em;color:var(--text-dim);text-transform:uppercase;}
+.visitor-count{font-family:'Orbitron',monospace;font-size:0.95rem;font-weight:700;color:var(--neon);letter-spacing:0.12em;min-width:90px;text-align:right;}
 
-.card{position:relative;background:var(--surface);border:1px solid var(--border);margin-bottom:10px;overflow:hidden;transition:border-color 0.3s ease,box-shadow 0.3s ease;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));}
-.card::before{content:'';position:absolute;top:0;left:0;width:3px;height:0;background:linear-gradient(to bottom,var(--neon),var(--neon2));transition:height 0.4s ease;}
+/* CARDS */
+.card{position:relative;background:var(--surface);border:1px solid var(--border);margin-bottom:10px;overflow:hidden;transition:border-color .3s,box-shadow .3s;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));}
+.card::before{content:'';position:absolute;top:0;left:0;width:3px;height:0;background:linear-gradient(to bottom,var(--neon),var(--neon2));transition:height .4s;}
 .card:hover::before,.card.active::before{height:100%;}
 .card:hover{border-color:var(--border-h);box-shadow:0 0 40px rgba(255,140,0,0.06);}
 .card.active{border-color:rgba(255,140,0,0.4);box-shadow:0 0 50px rgba(255,140,0,0.09);}
-
-.card-header{padding:20px 24px;cursor:none;display:flex;justify-content:space-between;align-items:center;user-select:none;transition:background 0.2s ease;}
+.card-header{padding:20px 24px;cursor:none;display:flex;justify-content:space-between;align-items:center;user-select:none;transition:background .2s;}
 .card-header:hover{background:rgba(255,140,0,0.02);}
 .card-num{font-family:'Orbitron',monospace;font-size:0.58rem;color:var(--neon);letter-spacing:0.2em;margin-bottom:4px;display:block;opacity:0.6;}
 .card-title{font-size:1rem;font-weight:700;color:var(--text);}
-
-.toggle-icon{width:30px;height:30px;border:1.5px solid var(--border-h);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--neon);transition:transform 0.35s ease,background 0.25s ease;flex-shrink:0;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
+.toggle-icon{width:30px;height:30px;border:1.5px solid var(--border-h);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--neon);transition:transform .35s,background .25s;flex-shrink:0;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
 .card.active .toggle-icon{transform:rotate(45deg);background:var(--neon);color:#000;}
+.card-content{overflow:hidden;max-height:0;transition:max-height .5s ease,padding .3s;padding:0 24px;color:var(--text-mid);line-height:2;font-size:0.95rem;border-top:1px solid transparent;}
+.card.active .card-content{max-height:900px;padding:18px 24px 24px;border-top-color:var(--border);}
 
-.card-content{overflow:hidden;max-height:0;transition:max-height 0.5s ease,padding 0.3s ease;padding:0 24px;color:var(--text-mid);line-height:2;font-size:0.95rem;border-top:1px solid transparent;}
-.card.active .card-content{max-height:700px;padding:18px 24px 24px;border-top-color:var(--border);}
-
-.skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+/* SKILLS WITH ICONS */
+.skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 @media(max-width:480px){.skills-grid{grid-template-columns:1fr;}}
-.skill-header{display:flex;justify-content:space-between;margin-bottom:8px;font-size:0.85rem;font-weight:600;}
-.skill-name{color:var(--text);}.skill-pct{font-family:'Orbitron',monospace;font-size:0.65rem;color:var(--neon);letter-spacing:0.1em;}
-.skill-bar{height:4px;background:rgba(255,140,0,0.1);position:relative;overflow:hidden;clip-path:polygon(4px 0%,100% 0%,calc(100% - 4px) 100%,0% 100%);}
-.skill-fill{height:100%;background:linear-gradient(90deg,var(--neon2),var(--neon),var(--neon3));width:0%;transition:width 1.2s cubic-bezier(0.25,0.46,0.45,0.94);box-shadow:0 0 10px var(--glow);}
+.skill-item{display:flex;flex-direction:column;gap:6px;}
+.skill-header{display:flex;justify-content:space-between;align-items:center;font-size:0.85rem;font-weight:600;}
+.skill-label{display:flex;align-items:center;gap:8px;color:var(--text);}
+.skill-icon{font-size:1.1rem;line-height:1;}
+.skill-pct{font-family:'Orbitron',monospace;font-size:0.62rem;color:var(--neon);letter-spacing:0.1em;}
+.skill-bar{height:4px;background:rgba(255,140,0,0.1);overflow:hidden;clip-path:polygon(4px 0%,100% 0%,calc(100% - 4px) 100%,0% 100%);}
+.skill-fill{height:100%;background:linear-gradient(90deg,var(--neon2),var(--neon),var(--neon3));width:0%;transition:width 1.3s cubic-bezier(0.25,0.46,0.45,0.94);box-shadow:0 0 10px var(--glow);}
 .card.active .skill-fill{width:var(--pct);}
 
-.projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+/* PROJECTS */
+.projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
 @media(max-width:600px){.projects-grid{grid-template-columns:1fr;}}
-.project-card{position:relative;background:var(--surface2);border:1px solid var(--border);overflow:hidden;cursor:none;transition:border-color 0.3s,transform 0.3s,box-shadow 0.3s;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));}
-.project-card:hover{border-color:var(--border-h);transform:translateY(-4px);box-shadow:0 12px 40px rgba(255,140,0,0.12);}
-.project-img{width:100%;height:110px;display:flex;align-items:center;justify-content:center;font-size:2.8rem;background:linear-gradient(135deg,#111 0%,#1a0f00 50%,#0f0a00 100%);transition:transform 0.4s;}
-.project-card:hover .project-img{transform:scale(1.08);}
+.project-card{position:relative;background:var(--surface2);border:1px solid var(--border);overflow:hidden;cursor:none;transition:border-color .3s,transform .3s,box-shadow .3s;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));}
+.project-card:hover{border-color:var(--border-h);transform:translateY(-5px);box-shadow:0 14px 40px rgba(255,140,0,0.13);}
+.project-thumb{width:100%;height:120px;object-fit:cover;display:block;background:linear-gradient(135deg,#111,#1a0f00,#0a0800);transition:transform .4s;overflow:hidden;}
+.project-thumb-emoji{width:100%;height:120px;display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,#111,#1a0f00,#0a0800);transition:transform .4s;}
+.project-card:hover .project-thumb,.project-card:hover .project-thumb-emoji{transform:scale(1.07);}
 .project-info{padding:12px;}
 .project-title{font-size:0.88rem;font-weight:700;color:var(--text);margin-bottom:4px;}
-.project-desc{font-size:0.75rem;color:var(--text-dim);line-height:1.6;margin-bottom:8px;}
-.project-tag{display:inline-block;padding:2px 8px;border:1px solid var(--border);font-family:'Orbitron',monospace;font-size:0.5rem;color:var(--neon);letter-spacing:0.1em;margin-left:3px;margin-bottom:3px;}
+.project-desc{font-size:0.74rem;color:var(--text-dim);line-height:1.6;margin-bottom:10px;}
+.project-footer{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:space-between;}
+.project-tag{display:inline-block;padding:2px 7px;border:1px solid var(--border);font-family:'Orbitron',monospace;font-size:0.48rem;color:var(--neon);letter-spacing:0.08em;}
+.play-btn{
+  font-family:'Orbitron',monospace;font-size:0.5rem;letter-spacing:0.1em;
+  padding:4px 10px;border:1px solid var(--neon);color:var(--neon);
+  background:transparent;cursor:none;transition:all .2s;text-decoration:none;
+  display:inline-block;
+}
+.play-btn:hover{background:var(--neon);color:#000;}
 
-.links-grid{display:flex;flex-wrap:wrap;gap:12px;}
-.btn-link{position:relative;display:inline-flex;align-items:center;gap:8px;padding:11px 28px;background:transparent;border:none;color:var(--text-mid);text-decoration:none;font-family:'Cairo',sans-serif;font-size:0.88rem;font-weight:600;cursor:none;transition:color 0.25s,filter 0.25s;}
-.btn-link .hb-bg{position:absolute;inset:0;border:1px solid var(--border);background:rgba(255,140,0,0.03);clip-path:polygon(12px 0%,calc(100% - 12px) 0%,100% 50%,calc(100% - 12px) 100%,12px 100%,0% 50%);transition:background 0.25s,border-color 0.25s;}
-.btn-link .hb-txt{position:relative;z-index:1;}
-.btn-link:hover .hb-bg{background:var(--neon);border-color:var(--neon);}
-.btn-link:hover{color:#000;filter:drop-shadow(0 4px 14px var(--glow));}
+/* SOCIAL CARDS */
+.social-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+@media(max-width:520px){.social-grid{grid-template-columns:repeat(2,1fr);}}
+.social-card{
+  position:relative;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;
+  padding:18px 10px;background:var(--surface2);
+  border:1px solid var(--border);text-decoration:none;
+  cursor:none;transition:border-color .3s,transform .3s,box-shadow .3s;
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+}
+.social-card:hover{border-color:var(--border-h);transform:translateY(-3px);box-shadow:0 10px 30px rgba(255,140,0,0.12);}
+.social-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--neon);opacity:0;transition:opacity .3s;}
+.social-card:hover::before{opacity:1;}
+.social-icon{font-size:1.6rem;line-height:1;}
+.social-name{font-family:'Orbitron',monospace;font-size:0.55rem;color:var(--neon);letter-spacing:0.12em;text-align:center;}
+.social-handle{font-size:0.72rem;color:var(--text-dim);text-align:center;}
 
+/* DEVLOG */
+.devlog-entry{padding:14px 0;border-bottom:1px solid var(--border);}
+.devlog-entry:last-child{border-bottom:none;}
+.devlog-date{font-family:'Orbitron',monospace;font-size:0.55rem;color:var(--neon);letter-spacing:0.15em;margin-bottom:4px;}
+.devlog-title{font-size:0.92rem;font-weight:700;color:var(--text);margin-bottom:6px;}
+.devlog-text{font-size:0.82rem;color:var(--text-mid);line-height:1.8;}
+.devlog-tag{display:inline-block;padding:1px 7px;border:1px solid var(--border);font-family:'Orbitron',monospace;font-size:0.48rem;color:var(--neon3);letter-spacing:0.08em;margin-top:8px;}
+
+/* CONTACT */
 .contact-form{display:flex;flex-direction:column;gap:14px;}
-.form-label{display:block;font-family:'Orbitron',monospace;font-size:0.6rem;letter-spacing:0.2em;color:var(--text-dim);margin-bottom:8px;text-transform:uppercase;}
-.form-input,.form-textarea{width:100%;padding:12px 16px;background:rgba(255,140,0,0.03);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.3s,box-shadow 0.3s;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);}
-.form-textarea{min-height:100px;resize:vertical;}
-.form-input:focus,.form-textarea:focus{border-color:var(--neon);box-shadow:0 0 20px rgba(255,140,0,0.08);}
+.form-label{display:block;font-family:'Orbitron',monospace;font-size:0.58rem;letter-spacing:0.2em;color:var(--text-dim);margin-bottom:6px;text-transform:uppercase;}
+.form-input,.form-textarea{width:100%;padding:11px 16px;background:rgba(255,140,0,0.03);border:1px solid var(--border);color:var(--text);font-family:var(--font-ar);font-size:0.9rem;outline:none;transition:border-color .3s,box-shadow .3s;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);}
+.form-textarea{min-height:96px;resize:vertical;}
+.form-input:focus,.form-textarea:focus{border-color:var(--neon);box-shadow:0 0 18px rgba(255,140,0,0.07);}
 .form-input::placeholder,.form-textarea::placeholder{color:var(--text-dim);}
-.submit-btn{align-self:flex-start;width:200px;padding:13px 0;color:var(--neon);font-size:0.75rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:none;}
+.submit-btn{align-self:flex-start;width:180px;padding:12px 0;color:var(--neon);font-size:0.72rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;cursor:none;}
 .submit-btn:hover{color:#000;}
+.formspree-note{font-size:0.72rem;color:var(--text-dim);margin-top:6px;font-style:italic;}
 
-.controls{position:fixed;bottom:0;left:0;right:0;z-index:500;padding:14px 24px;display:none;gap:12px;background:linear-gradient(to top,rgba(4,4,4,0.99) 55%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
-.control-btn{position:relative;flex:1;padding:12px 14px;background:transparent;border:none;color:var(--text-dim);font-family:'Orbitron',monospace;font-size:0.62rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:none;transition:color 0.25s,filter 0.25s;}
-.control-btn .hb-bg{position:absolute;inset:0;border:1px solid var(--border);background:rgba(8,8,8,0.96);clip-path:polygon(14px 0%,calc(100% - 14px) 0%,100% 50%,calc(100% - 14px) 100%,14px 100%,0% 50%);transition:background 0.25s,border-color 0.25s;}
+/* CONTROLS */
+.controls{position:fixed;bottom:0;left:0;right:0;z-index:500;padding:13px 24px;display:none;gap:12px;background:linear-gradient(to top,rgba(4,4,4,0.99) 55%,transparent);backdrop-filter:blur(8px);}
+.control-btn{position:relative;flex:1;padding:11px 14px;background:transparent;border:none;color:var(--text-dim);font-family:'Orbitron',monospace;font-size:0.6rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:none;transition:color .25s,filter .25s;}
+.control-btn .hb-bg{position:absolute;inset:0;border:1px solid var(--border);background:rgba(8,8,8,0.96);clip-path:polygon(14px 0%,calc(100% - 14px) 0%,100% 50%,calc(100% - 14px) 100%,14px 100%,0% 50%);transition:background .25s,border-color .25s;}
 .control-btn .hb-txt{position:relative;z-index:1;}
 .control-btn:hover .hb-bg{border-color:var(--neon);background:rgba(255,140,0,0.06);}
-.control-btn:hover{color:var(--neon);filter:drop-shadow(0 0 10px var(--glow));}
+.control-btn:hover{color:var(--neon);filter:drop-shadow(0 0 8px var(--glow));}
 
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);border:1px solid var(--neon);color:var(--neon);font-family:'Orbitron',monospace;font-size:0.65rem;letter-spacing:0.15em;padding:10px 24px;z-index:9000;opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none;clip-path:polygon(10px 0%,calc(100% - 10px) 0%,100% 50%,calc(100% - 10px) 100%,10px 100%,0% 50%);}
+/* TOAST */
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(18px);background:var(--surface);border:1px solid var(--neon);color:var(--neon);font-family:'Orbitron',monospace;font-size:0.62rem;letter-spacing:0.15em;padding:9px 22px;z-index:9000;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;clip-path:polygon(10px 0%,calc(100% - 10px) 0%,100% 50%,calc(100% - 10px) 100%,10px 100%,0% 50%);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:rgba(255,140,0,0.25);}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:rgba(255,140,0,0.22);}
 
-@media(max-width:480px){.main-container{padding:36px 16px 130px;}.card-header{padding:16px 18px;}.card.active .card-content{padding:14px 18px 20px;}.enter-btn{width:180px;}}
+@media(max-width:480px){
+  .main-container{padding:36px 16px 128px;}
+  .card-header{padding:16px 18px;}
+  .card.active .card-content{padding:14px 18px 20px;}
+  .social-grid{grid-template-columns:repeat(2,1fr);}
+  .projects-grid{grid-template-columns:1fr;}
+}
 </style>
 </head>
 <body>
 
-<div id="cursor">
-  <svg viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M2 2L2 20L7.5 15L11 22L13.5 21L10 14L18 14L2 2Z" fill="#ff8c00" stroke="#000" stroke-width="1" stroke-linejoin="round"/>
-  </svg>
-</div>
+<div id="cursor"><svg viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg"><path d="M2 1.5L2 18.5L6.5 13.8L9.5 20.2L11.8 19.2L8.8 12.8L16 12.8L2 1.5Z" stroke="rgba(0,0,0,0.6)" stroke-width="1" stroke-linejoin="round"/></svg></div>
 <div id="cursor-ring"></div>
 <div class="grid-bg"></div>
 <canvas id="matrix-canvas"></canvas>
 <canvas id="particles-canvas"></canvas>
 <div class="toast" id="toast"></div>
 
+<!-- TERMINAL -->
+<div id="terminal">
+  <button id="terminal-close" onclick="closeTerminal()">[ CLOSE ]</button>
+  <div id="terminal-output"></div>
+  <div id="terminal-input-row">
+    <span id="terminal-prompt">olkie@world:~$</span>
+    <input id="terminal-input" type="text" autocomplete="off" spellcheck="false" placeholder="type 'help'">
+  </div>
+</div>
+
 <!-- ══ WELCOME ══ -->
 <div id="welcome-screen">
   <div class="ui-corner tl">SYS.v2.4</div>
-  <div class="ui-corner tr">OLKIE.DEV</div>
-  <div class="ui-corner bl">AR/EN</div>
+  <div class="ui-corner tr clickable" onclick="openTerminal()" title="Open Terminal">[ TERMINAL ]</div>
+  <div class="ui-corner bl" id="uiBL">EN/AR</div>
   <div class="ui-corner br">◈ READY</div>
   <div class="avatar-frame">
     <div class="corner-box corner-tl"></div><div class="corner-box corner-tr"></div>
@@ -232,9 +261,9 @@ html[dir="ltr"] .section-label::after{background:linear-gradient(to right,transp
   <div class="welcome-name">OLKIE <span>WORLD</span></div>
   <div class="typing-wrapper"><span id="typed-text"></span><span class="cursor"></span></div>
   <button class="hex-btn enter-btn" onclick="openWorld()">
-    <div class="hb-bg"></div><span class="hb-txt" id="enterTxt">دخول</span>
+    <div class="hb-bg"></div><span class="hb-txt" id="enterTxt">ENTER</span>
   </button>
-  <div class="status-bar"><div class="status-dot"></div><span>SYSTEM ONLINE</span></div>
+  <div class="status-bar"><div class="status-dot"></div><span id="statusLabel">SYSTEM ONLINE</span></div>
 </div>
 
 <!-- ══ MAIN ══ -->
@@ -245,237 +274,300 @@ html[dir="ltr"] .section-label::after{background:linear-gradient(to right,transp
     <div class="mode-badge"><div class="mode-badge-dot"></div><span id="modeStatus">NIGHT MODE</span></div>
   </div>
 
-  <div class="visitor-strip">
-    <span class="visitor-label" id="visitorLabel">إجمالي الزيارات</span>
-    <span class="visitor-count" id="visitorCount">000000</span>
+  <!-- VISITOR -->
+  <div class="visitor-strip" data-aos="fade-up">
+    <span class="visitor-label" id="visitorLabel">TOTAL VISITS</span>
+    <span class="visitor-count" id="visitorCount">—</span>
   </div>
 
-  <!-- 01 من أنا -->
-  <div class="section-label" id="sl1">// IDENTITY</div>
-  <div class="card">
+  <!-- 01 IDENTITY -->
+  <div class="section-label" id="sl1" data-aos="fade-up">// IDENTITY</div>
+  <div class="card" data-aos="fade-up" data-aos-delay="50">
     <div class="card-header" onclick="toggleCard(this)">
-      <div><span class="card-num" id="n1">// 01</span><span class="card-title" id="h1">مَن أنا؟</span></div>
+      <div><span class="card-num" id="n1">// 01</span><span class="card-title" id="h1">Who Am I?</span></div>
       <div class="toggle-icon">+</div>
     </div>
-    <div class="card-content"><p id="c1">اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!</p></div>
+    <div class="card-content"><p id="c1">My name is Olkie — a programmer, designer, and content creator from Iraq. I build games with Godot Engine and share my journey online. Hope you enjoy playing my games!</p></div>
   </div>
 
-  <!-- 02 مهارات -->
-  <div class="section-label" id="sl2" style="margin-top:20px;">// SKILLS</div>
-  <div class="card">
+  <!-- 02 SKILLS -->
+  <div class="section-label" id="sl2" style="margin-top:20px;" data-aos="fade-up">// SKILLS</div>
+  <div class="card" data-aos="fade-up" data-aos-delay="50">
     <div class="card-header" onclick="toggleCard(this)">
-      <div><span class="card-num" id="n2">// 02</span><span class="card-title" id="h2">مهاراتي</span></div>
+      <div><span class="card-num" id="n2">// 02</span><span class="card-title" id="h2">My Skills</span></div>
       <div class="toggle-icon">+</div>
     </div>
     <div class="card-content">
       <div class="skills-grid">
-        <div class="skill-item"><div class="skill-header"><span class="skill-name">Godot Engine</span><span class="skill-pct">85%</span></div><div class="skill-bar"><div class="skill-fill" style="--pct:85%"></div></div></div>
-        <div class="skill-item"><div class="skill-header"><span class="skill-name">Python</span><span class="skill-pct">75%</span></div><div class="skill-bar"><div class="skill-fill" style="--pct:75%"></div></div></div>
-        <div class="skill-item"><div class="skill-header"><span class="skill-name">HTML / CSS</span><span class="skill-pct">80%</span></div><div class="skill-bar"><div class="skill-fill" style="--pct:80%"></div></div></div>
-        <div class="skill-item"><div class="skill-header"><span class="skill-name">JavaScript</span><span class="skill-pct">65%</span></div><div class="skill-bar"><div class="skill-fill" style="--pct:65%"></div></div></div>
-        <div class="skill-item"><div class="skill-header"><span class="skill-name">Game Design</span><span class="skill-pct">90%</span></div><div class="skill-bar"><div class="skill-fill" style="--pct:90%"></div></div></div>
-        <div class="skill-item"><div class="skill-header"><span class="skill-name">UI / UX</span><span class="skill-pct">70%</span></div><div class="skill-bar"><div class="skill-fill" style="--pct:70%"></div></div></div>
+        <div class="skill-item"><div class="skill-header"><span class="skill-label"><span class="skill-icon">🎮</span> Godot Engine</span><span class="skill-pct">85%</span></div><div class="skill-bar"><div class="skill-fill" style="--pct:85%"></div></div></div>
+        <div class="skill-item"><div class="skill-header"><span class="skill-label"><span class="skill-icon">🐍</span> Python</span><span class="skill-pct">75%</span></div><div class="skill-bar"><div class="skill-fill" style="--pct:75%"></div></div></div>
+        <div class="skill-item"><div class="skill-header"><span class="skill-label"><span class="skill-icon">🌐</span> HTML / CSS</span><span class="skill-pct">80%</span></div><div class="skill-bar"><div class="skill-fill" style="--pct:80%"></div></div></div>
+        <div class="skill-item"><div class="skill-header"><span class="skill-label"><span class="skill-icon">⚡</span> JavaScript</span><span class="skill-pct">65%</span></div><div class="skill-bar"><div class="skill-fill" style="--pct:65%"></div></div></div>
+        <div class="skill-item"><div class="skill-header"><span class="skill-label"><span class="skill-icon">🕹️</span> Game Design</span><span class="skill-pct">90%</span></div><div class="skill-bar"><div class="skill-fill" style="--pct:90%"></div></div></div>
+        <div class="skill-item"><div class="skill-header"><span class="skill-label"><span class="skill-icon">🎨</span> UI / UX</span><span class="skill-pct">70%</span></div><div class="skill-bar"><div class="skill-fill" style="--pct:70%"></div></div></div>
       </div>
     </div>
   </div>
 
-  <!-- 03 مشاريع -->
-  <div class="section-label" id="sl3" style="margin-top:20px;">// PROJECTS</div>
-  <div class="card">
+  <!-- 03 PROJECTS -->
+  <div class="section-label" id="sl3" style="margin-top:20px;" data-aos="fade-up">// PROJECTS</div>
+  <div class="card" data-aos="fade-up" data-aos-delay="50">
     <div class="card-header" onclick="toggleCard(this)">
-      <div><span class="card-num" id="n3">// 03</span><span class="card-title" id="h3">مشاريعي</span></div>
+      <div><span class="card-num" id="n3">// 03</span><span class="card-title" id="h3">My Projects</span></div>
       <div class="toggle-icon">+</div>
     </div>
     <div class="card-content">
       <div class="projects-grid">
-        <div class="project-card" onclick="window.open('https://olkie-1.itch.io/alien-fight','_blank')">
-          <div class="project-img">👾</div>
-          <div class="project-info"><div class="project-title">Alien Fight</div><div class="project-desc" id="pd1">قاتل الغزاة الفضائيين وتجنب هجماتهم!</div><span class="project-tag">GODOT</span><span class="project-tag">ACTION</span></div>
+        <div class="project-card">
+          <div class="project-thumb-emoji">👾</div>
+          <div class="project-info">
+            <div class="project-title">Alien Fight</div>
+            <div class="project-desc" id="pd1">Shoot down alien invaders and dodge their attacks in this fast-paced action game!</div>
+            <div class="project-footer">
+              <div><span class="project-tag">GODOT</span><span class="project-tag">ACTION</span></div>
+              <a href="https://olkie-1.itch.io/alien-fight" target="_blank" class="play-btn" id="pb1">▶ PLAY</a>
+            </div>
+          </div>
         </div>
-        <div class="project-card" onclick="window.open('https://olkie-1.itch.io/cannon-vs-ogres','_blank')">
-          <div class="project-img">💣</div>
-          <div class="project-info"><div class="project-title">Cannon vs Ogres</div><div class="project-desc" id="pd2">استخدم مدفعك لإيقاف موجات العمالقة!</div><span class="project-tag">GODOT</span><span class="project-tag">STRATEGY</span></div>
+        <div class="project-card">
+          <div class="project-thumb-emoji">💣</div>
+          <div class="project-info">
+            <div class="project-title">Cannon vs Ogres</div>
+            <div class="project-desc" id="pd2">Aim your cannon and stop endless waves of ogres before they break through!</div>
+            <div class="project-footer">
+              <div><span class="project-tag">GODOT</span><span class="project-tag">STRATEGY</span></div>
+              <a href="https://olkie-1.itch.io/cannon-vs-ogres" target="_blank" class="play-btn" id="pb2">▶ PLAY</a>
+            </div>
+          </div>
         </div>
-        <div class="project-card" onclick="window.open('https://olkie-1.itch.io/pong','_blank')">
-          <div class="project-img">🏓</div>
-          <div class="project-info"><div class="project-title">Pong</div><div class="project-desc" id="pd3">الكلاسيكية بلمسة خاصة من أولكي!</div><span class="project-tag">GODOT</span><span class="project-tag">CLASSIC</span></div>
+        <div class="project-card">
+          <div class="project-thumb-emoji">🏓</div>
+          <div class="project-info">
+            <div class="project-title">Pong</div>
+            <div class="project-desc" id="pd3">The timeless classic — Pong — rebuilt with Olkie's personal twist!</div>
+            <div class="project-footer">
+              <div><span class="project-tag">GODOT</span><span class="project-tag">CLASSIC</span></div>
+              <a href="https://olkie-1.itch.io/pong" target="_blank" class="play-btn" id="pb3">▶ PLAY</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 04 حسابات -->
-  <div class="section-label" id="sl4" style="margin-top:20px;">// ACCOUNTS</div>
-  <div class="card">
+  <!-- 04 DEVLOG -->
+  <div class="section-label" id="sl4" style="margin-top:20px;" data-aos="fade-up">// DEVLOG</div>
+  <div class="card" data-aos="fade-up" data-aos-delay="50">
     <div class="card-header" onclick="toggleCard(this)">
-      <div><span class="card-num" id="n4">// 04</span><span class="card-title" id="h4">الحسابات</span></div>
+      <div><span class="card-num" id="n4">// 04</span><span class="card-title" id="h4">Dev Journal</span></div>
       <div class="toggle-icon">+</div>
     </div>
     <div class="card-content">
-      <div class="links-grid">
-        <a href="https://t.me/Al_irabi" target="_blank" class="btn-link">
-          <div class="hb-bg"></div><span class="hb-txt">✈️ قناة الاعرابي</span>
+      <div class="devlog-entry">
+        <div class="devlog-date" id="dl1d">APR 2025</div>
+        <div class="devlog-title" id="dl1t">Building Alien Fight — The Challenge of Enemy AI</div>
+        <div class="devlog-text" id="dl1c">Getting enemies to move intelligently without ruining performance was tricky. I ended up using a simple state machine in GDScript — idle, chase, attack. Surprisingly clean once it clicked.</div>
+        <span class="devlog-tag">GODOT</span><span class="devlog-tag" style="margin-left:4px;">AI</span>
+      </div>
+      <div class="devlog-entry">
+        <div class="devlog-date" id="dl2d">MAR 2025</div>
+        <div class="devlog-title" id="dl2t">Why I Chose Godot Over Unity</div>
+        <div class="devlog-text" id="dl2c">Open source, lightweight, and GDScript feels natural for rapid prototyping. After trying both, Godot just gets out of my way and lets me build. No subscription fees either.</div>
+        <span class="devlog-tag">OPINION</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 ACCOUNTS -->
+  <div class="section-label" id="sl5" style="margin-top:20px;" data-aos="fade-up">// ACCOUNTS</div>
+  <div class="card" data-aos="fade-up" data-aos-delay="50">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div><span class="card-num" id="n5">// 05</span><span class="card-title" id="h5">Accounts</span></div>
+      <div class="toggle-icon">+</div>
+    </div>
+    <div class="card-content">
+      <div class="social-grid">
+        <a href="https://t.me/Al_irabi" target="_blank" class="social-card">
+          <span class="social-icon">✈️</span>
+          <span class="social-name">TELEGRAM</span>
+          <span class="social-handle">قناة الاعرابي</span>
         </a>
-        <a href="https://t.me/EBIQ7" target="_blank" class="btn-link">
-          <div class="hb-bg"></div><span class="hb-txt">✈️ قناة عبارات</span>
+        <a href="https://t.me/EBIQ7" target="_blank" class="social-card">
+          <span class="social-icon">✈️</span>
+          <span class="social-name">TELEGRAM</span>
+          <span class="social-handle">قناة عبارات</span>
         </a>
-        <a href="https://x.com/_olkie" target="_blank" class="btn-link">
-          <div class="hb-bg"></div><span class="hb-txt">𝕏 Twitter</span>
+        <a href="https://x.com/_olkie" target="_blank" class="social-card">
+          <span class="social-icon">𝕏</span>
+          <span class="social-name">TWITTER / X</span>
+          <span class="social-handle">@_olkie</span>
         </a>
-        <a href="https://discord.gg/QdvF2tjy6h" target="_blank" class="btn-link">
-          <div class="hb-bg"></div><span class="hb-txt">💬 Discord</span>
+        <a href="https://discord.gg/QdvF2tjy6h" target="_blank" class="social-card">
+          <span class="social-icon">💬</span>
+          <span class="social-name">DISCORD</span>
+          <span class="social-handle">Olkie Server</span>
         </a>
-        <a href="https://m.youtube.com/@_olkie" target="_blank" class="btn-link">
-          <div class="hb-bg"></div><span class="hb-txt">🎥 YouTube</span>
+        <a href="https://m.youtube.com/@_olkie" target="_blank" class="social-card">
+          <span class="social-icon">🎥</span>
+          <span class="social-name">YOUTUBE</span>
+          <span class="social-handle">@_olkie</span>
         </a>
-        <a href="https://www.linkedin.com/in/olkie-اولكي-7bb798370" target="_blank" class="btn-link">
-          <div class="hb-bg"></div><span class="hb-txt">💼 LinkedIn</span>
+        <a href="https://www.linkedin.com/in/olkie-اولكي-7bb798370" target="_blank" class="social-card">
+          <span class="social-icon">💼</span>
+          <span class="social-name">LINKEDIN</span>
+          <span class="social-handle">Olkie</span>
         </a>
       </div>
     </div>
   </div>
 
-  <!-- 05 تواصل -->
-  <div class="section-label" id="sl5" style="margin-top:20px;">// CONTACT</div>
-  <div class="card">
+  <!-- 06 CONTACT -->
+  <div class="section-label" id="sl6" style="margin-top:20px;" data-aos="fade-up">// CONTACT</div>
+  <div class="card" data-aos="fade-up" data-aos-delay="50">
     <div class="card-header" onclick="toggleCard(this)">
-      <div><span class="card-num" id="n5">// 05</span><span class="card-title" id="h5">تواصل معي</span></div>
+      <div><span class="card-num" id="n6">// 06</span><span class="card-title" id="h6">Contact Me</span></div>
       <div class="toggle-icon">+</div>
     </div>
     <div class="card-content">
-      <div class="contact-form">
-        <div><label class="form-label" id="fl1">الاسم</label><input class="form-input" type="text" id="contactName" placeholder="اسمك هنا..."></div>
-        <div><label class="form-label" id="fl2">البريد الإلكتروني</label><input class="form-input" type="email" id="contactEmail" placeholder="email@example.com"></div>
-        <div><label class="form-label" id="fl3">الرسالة</label><textarea class="form-textarea" id="contactMsg" placeholder="رسالتك..."></textarea></div>
-        <button class="hex-btn submit-btn" onclick="sendContact()">
-          <div class="hb-bg"></div><span class="hb-txt" id="submitTxt">إرسال</span>
-        </button>
-      </div>
+      <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" onsubmit="handleForm(event)">
+        <div><label class="form-label" id="fl1">Name</label><input class="form-input" type="text" name="name" id="contactName" placeholder="Your name..." required></div>
+        <div><label class="form-label" id="fl2">Email</label><input class="form-input" type="email" name="email" id="contactEmail" placeholder="email@example.com" required></div>
+        <div><label class="form-label" id="fl3">Message</label><textarea class="form-textarea" name="message" id="contactMsg" placeholder="Your message..." required></textarea></div>
+        <button type="submit" class="hex-btn submit-btn"><div class="hb-bg"></div><span class="hb-txt" id="submitTxt">SEND</span></button>
+        <p class="formspree-note" id="formNote">Powered by Formspree — replace YOUR_FORM_ID with your actual ID at formspree.io</p>
+      </form>
     </div>
   </div>
 
 </div>
 
-<!-- ══ CONTROLS ══ -->
+<!-- CONTROLS -->
 <div class="controls" id="controls">
-  <button class="control-btn" onclick="toggleLanguage()"><div class="hb-bg"></div><span class="hb-txt" id="langTxt">EN</span></button>
+  <button class="control-btn" onclick="toggleLanguage()"><div class="hb-bg"></div><span class="hb-txt" id="langTxt">عربي</span></button>
   <button class="control-btn" onclick="toggleMode()"><div class="hb-bg"></div><span class="hb-txt" id="modeBtn">TOGGLE MODE</span></button>
 </div>
 
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
+AOS.init({duration:600,easing:'ease-out',once:true,offset:40});
+
+/* ── DATA ── */
 var T={
-  ar:{
-    words:["صانع محتوى","مبرمج","صانع ألعاب"],
-    enter:"دخول",visitorLabel:"إجمالي الزيارات",
-    sl1:"// الهوية",sl2:"// المهارات",sl3:"// المشاريع",sl4:"// الحسابات",sl5:"// التواصل",
-    n1:"// 01",h1:"مَن أنا؟",c1:"اسمي أولكي، مبرمج ومصمم، ولدي بعض مشاريع الألعاب التي برمجتها. أرجو أن تستمتعوا وأنتم تجربون ألعابي!",
-    n2:"// 02",h2:"مهاراتي",n3:"// 03",h3:"مشاريعي",
-    pd1:"قاتل الغزاة الفضائيين وتجنب هجماتهم!",pd2:"استخدم مدفعك لإيقاف موجات العمالقة!",pd3:"الكلاسيكية بلمسة خاصة من أولكي!",
-    n4:"// 04",h4:"الحسابات",n5:"// 05",h5:"تواصل معي",
-    fl1:"الاسم",fl2:"البريد الإلكتروني",fl3:"الرسالة",submitTxt:"إرسال",
-    modeN:"NIGHT MODE",modeM:"MORNING MODE",btnMode:"تبديل الوضع",langSwitch:"EN",dir:"rtl",
-    toastSent:"تم الإرسال ✓",toastErr:"يرجى ملء جميع الحقول"
-  },
   en:{
     words:["Content Creator","Programmer","Game Developer"],
     enter:"ENTER",visitorLabel:"TOTAL VISITS",
-    sl1:"// IDENTITY",sl2:"// SKILLS",sl3:"// PROJECTS",sl4:"// ACCOUNTS",sl5:"// CONTACT",
-    n1:"// 01",h1:"Who Am I?",c1:"My name is Olkie, a programmer and designer with several game projects I built from scratch. Hope you enjoy playing them!",
+    sl1:"// IDENTITY",sl2:"// SKILLS",sl3:"// PROJECTS",sl4:"// DEVLOG",sl5:"// ACCOUNTS",sl6:"// CONTACT",
+    n1:"// 01",h1:"Who Am I?",c1:"My name is Olkie — a programmer, designer, and content creator from Iraq. I build games with Godot Engine and share my journey online. Hope you enjoy playing my games!",
     n2:"// 02",h2:"My Skills",n3:"// 03",h3:"My Projects",
-    pd1:"Fight alien invaders and dodge their attacks!",pd2:"Use your cannon to stop waves of ogres!",pd3:"The classic Pong with Olkie's own twist!",
-    n4:"// 04",h4:"Accounts",n5:"// 05",h5:"Contact Me",
+    pd1:"Shoot down alien invaders and dodge their attacks in this fast-paced action game!",
+    pd2:"Aim your cannon and stop endless waves of ogres before they break through!",
+    pd3:"The timeless classic — Pong — rebuilt with Olkie's personal twist!",
+    pb1:"▶ PLAY",pb2:"▶ PLAY",pb3:"▶ PLAY",
+    n4:"// 04",h4:"Dev Journal",
+    dl1d:"APR 2025",dl1t:"Building Alien Fight — The Challenge of Enemy AI",dl1c:"Getting enemies to move intelligently without ruining performance was tricky. I ended up using a simple state machine in GDScript — idle, chase, attack. Surprisingly clean once it clicked.",
+    dl2d:"MAR 2025",dl2t:"Why I Chose Godot Over Unity",dl2c:"Open source, lightweight, and GDScript feels natural for rapid prototyping. After trying both, Godot just gets out of my way and lets me build. No subscription fees either.",
+    n5:"// 05",h5:"Accounts",n6:"// 06",h6:"Contact Me",
     fl1:"NAME",fl2:"EMAIL",fl3:"MESSAGE",submitTxt:"SEND",
     modeN:"NIGHT MODE",modeM:"MORNING MODE",btnMode:"TOGGLE MODE",langSwitch:"عربي",dir:"ltr",
-    toastSent:"Sent ✓",toastErr:"Please fill all fields"
+    toastSent:"Message sent ✓",toastErr:"Please fill all fields",
+    formNote:"Powered by Formspree — replace YOUR_FORM_ID at formspree.io"
+  },
+  ar:{
+    words:["صانع محتوى","مبرمج","صانع ألعاب"],
+    enter:"دخول",visitorLabel:"إجمالي الزيارات",
+    sl1:"// الهوية",sl2:"// المهارات",sl3:"// المشاريع",sl4:"// يوميات التطوير",sl5:"// الحسابات",sl6:"// التواصل",
+    n1:"// 01",h1:"مَن أنا؟",c1:"اسمي أولكي — مبرمج ومصمم وصانع محتوى من العراق. أبني الألعاب باستخدام Godot وأشارك رحلتي عبر الإنترنت. أرجو أن تستمتعوا بألعابي!",
+    n2:"// 02",h2:"مهاراتي",n3:"// 03",h3:"مشاريعي",
+    pd1:"قاتل الغزاة الفضائيين وتجنب هجماتهم في لعبة أكشن سريعة الإيقاع!",
+    pd2:"صوّب مدفعك وأوقف موجات العمالقة قبل أن تخترق دفاعاتك!",
+    pd3:"اللعبة الكلاسيكية الخالدة — بونج — أُعيد بناؤها بلمسة أولكي الخاصة!",
+    pb1:"▶ العب",pb2:"▶ العب",pb3:"▶ العب",
+    n4:"// 04",h4:"يوميات التطوير",
+    dl1d:"أبريل 2025",dl1t:"بناء Alien Fight — تحدي ذكاء الأعداء",dl1c:"جعل الأعداء يتحركون بذكاء دون الإضرار بالأداء كان تحدياً. استخدمت آلة حالات بسيطة في GDScript — توقف، ملاحقة، هجوم. نظيفة بشكل مفاجئ بمجرد أن استوعبت المبدأ.",
+    dl2d:"مارس 2025",dl2t:"لماذا اخترت Godot على Unity",dl2c:"مفتوح المصدر، خفيف الوزن، وGDScript يبدو طبيعياً للنمذجة السريعة. بعد تجربة كليهما، Godot يبتعد عن طريقي ويتركني أبني. بدون رسوم اشتراك أيضاً.",
+    n5:"// 05",h5:"الحسابات",n6:"// 06",h6:"تواصل معي",
+    fl1:"الاسم",fl2:"البريد الإلكتروني",fl3:"الرسالة",submitTxt:"إرسال",
+    modeN:"NIGHT MODE",modeM:"MORNING MODE",btnMode:"تبديل الوضع",langSwitch:"EN",dir:"rtl",
+    toastSent:"تم الإرسال ✓",toastErr:"يرجى ملء جميع الحقول",
+    formNote:"مدعوم بـ Formspree — ضع ID النموذج الخاص بك من formspree.io"
   }
 };
 
-var currentLang='ar';
+var currentLang='en';
 
-/* CURSOR */
-var cur=document.getElementById('cursor');
-var ring=document.getElementById('cursor-ring');
+/* ── CURSOR ── */
+var cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
 var mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',function(e){
-  mx=e.clientX;my=e.clientY;
-  cur.style.left=(mx)+'px';cur.style.top=(my)+'px';
-});
-(function animR(){
-  rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;
-  ring.style.left=rx+'px';ring.style.top=ry+'px';
-  requestAnimationFrame(animR);
-})();
-document.querySelectorAll('button,a,.card-header,.project-card').forEach(function(el){
-  el.addEventListener('mouseenter',function(){ring.style.width='44px';ring.style.height='44px';ring.style.opacity='0.4';});
-  el.addEventListener('mouseleave',function(){ring.style.width='36px';ring.style.height='36px';ring.style.opacity='0.2';});
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function ar(){rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ar);})();
+document.querySelectorAll('button,a,.card-header,.project-card,.social-card').forEach(function(el){
+  el.addEventListener('mouseenter',function(){ring.style.width='46px';ring.style.height='46px';ring.style.opacity='0.38';});
+  el.addEventListener('mouseleave',function(){ring.style.width='38px';ring.style.height='38px';ring.style.opacity='0.18';});
 });
 
-/* PARTICLES */
-var pc=document.getElementById('particles-canvas');
-var pctx=pc.getContext('2d');
-var pColorStr='rgba(255,140,0,';
+/* ── PARTICLES ── */
+var pc=document.getElementById('particles-canvas'),pctx=pc.getContext('2d');
+var pColor='rgba(255,140,0,';
 function resizePC(){pc.width=window.innerWidth;pc.height=window.innerHeight;}
 resizePC();
-var particles=[];
-for(var i=0;i<50;i++){particles.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,vx:(Math.random()-0.5)*0.28,vy:(Math.random()-0.5)*0.28,r:Math.random()*1.4+0.3,o:Math.random()*0.35+0.08});}
-(function dp(){
-  pctx.clearRect(0,0,pc.width,pc.height);
-  particles.forEach(function(p){p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=pc.width;if(p.x>pc.width)p.x=0;if(p.y<0)p.y=pc.height;if(p.y>pc.height)p.y=0;pctx.beginPath();pctx.arc(p.x,p.y,p.r,0,Math.PI*2);pctx.fillStyle=pColorStr+p.o+')';pctx.fill();});
-  requestAnimationFrame(dp);
-})();
-document.addEventListener('click',function(e){
-  for(var i=0;i<10;i++){var b={x:e.clientX,y:e.clientY,vx:(Math.random()-0.5)*5,vy:(Math.random()-0.5)*5,r:Math.random()*2+0.5,o:0.9,life:35};(function ab(b){b.life--;b.x+=b.vx;b.y+=b.vy;b.o-=0.025;if(b.life>0&&b.o>0){pctx.beginPath();pctx.arc(b.x,b.y,b.r,0,Math.PI*2);pctx.fillStyle=pColorStr+b.o+')';pctx.fill();requestAnimationFrame(function(){ab(b);});}})(b);}
-});
+var pts=[];
+for(var i=0;i<55;i++)pts.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28,r:Math.random()*1.3+.3,o:Math.random()*.3+.07});
+(function dp(){pctx.clearRect(0,0,pc.width,pc.height);pts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=pc.width;if(p.x>pc.width)p.x=0;if(p.y<0)p.y=pc.height;if(p.y>pc.height)p.y=0;pctx.beginPath();pctx.arc(p.x,p.y,p.r,0,Math.PI*2);pctx.fillStyle=pColor+p.o+')';pctx.fill();});requestAnimationFrame(dp);})();
+document.addEventListener('click',function(e){for(var i=0;i<10;i++){var b={x:e.clientX,y:e.clientY,vx:(Math.random()-.5)*5.5,vy:(Math.random()-.5)*5.5,r:Math.random()*2+.5,o:.9,life:35};(function ab(b){b.life--;b.x+=b.vx;b.y+=b.vy;b.o-=.026;if(b.life>0&&b.o>0){pctx.beginPath();pctx.arc(b.x,b.y,b.r,0,Math.PI*2);pctx.fillStyle=pColor+b.o+')';pctx.fill();requestAnimationFrame(function(){ab(b);});}})(b);}});
 
-/* TYPING — سريع وسلس */
+/* ── TYPING ── */
 var typedEl=document.getElementById('typed-text');
 var wIdx=0,cIdx=0,isDel=false,tOut;
 function type(){
   var words=T[currentLang].words,word=words[wIdx];
   isDel?cIdx--:cIdx++;
   typedEl.textContent=word.substring(0,cIdx);
-  var spd=isDel?40:80;
+  var spd=isDel?38:78;
   if(!isDel&&cIdx===word.length){spd=1200;isDel=true;}
   else if(isDel&&cIdx===0){isDel=false;wIdx=(wIdx+1)%words.length;spd=200;}
   tOut=setTimeout(type,spd);
 }
 type();
 
-/* VISITOR */
+/* ── VISITOR — FIXED ── */
 function initCounter(){
-  var c=parseInt(localStorage.getItem('olkie_visits')||'0')+1;
-  localStorage.setItem('olkie_visits',c);
-  var el=document.getElementById('visitorCount');
-  var target=c+Math.floor(Math.random()*9000+4000);
-  var curr=target-60;
-  (function ac(){curr+=4;if(curr>=target){el.textContent=String(target).padStart(6,'0');return;}el.textContent=String(curr).padStart(6,'0');requestAnimationFrame(ac);})();
+  var stored=parseInt(localStorage.getItem('olk_v')||'0');
+  stored++;
+  localStorage.setItem('olk_v',stored);
+  /* show a realistic number: stored visits + offset */
+  var display=stored+1247;
+  document.getElementById('visitorCount').textContent=display.toLocaleString();
 }
 
-/* LANGUAGE */
+/* ── LANGUAGE ── */
+var langIds=['enterTxt','visitorLabel','sl1','sl2','sl3','sl4','sl5','sl6',
+  'n1','h1','c1','n2','h2','n3','h3','pd1','pd2','pd3','pb1','pb2','pb3',
+  'n4','h4','dl1d','dl1t','dl1c','dl2d','dl2t','dl2c',
+  'n5','h5','n6','h6','fl1','fl2','fl3','submitTxt','modeBtn','langTxt','formNote'];
+
 function toggleLanguage(){
-  currentLang=currentLang==='ar'?'en':'ar';
+  currentLang=currentLang==='en'?'ar':'en';
+  applyLang();
+}
+function applyLang(){
   var d=T[currentLang];
   document.documentElement.dir=d.dir;document.documentElement.lang=currentLang;
-  ['enterTxt','visitorLabel','sl1','sl2','sl3','sl4','sl5',
-   'n1','h1','c1','n2','h2','n3','h3','pd1','pd2','pd3',
-   'n4','h4','n5','h5','fl1','fl2','fl3','submitTxt','modeBtn','langTxt'].forEach(function(id){
-    var el=document.getElementById(id);if(el&&d[id]!==undefined)el.textContent=d[id];
-  });
-  document.getElementById('contactName').placeholder=currentLang==='ar'?'اسمك هنا...':'Your name...';
-  document.getElementById('contactMsg').placeholder=currentLang==='ar'?'رسالتك...':'Your message...';
+  langIds.forEach(function(id){var el=document.getElementById(id);if(el&&d[id]!==undefined)el.textContent=d[id];});
+  var cn=document.getElementById('contactName'),cm=document.getElementById('contactMsg');
+  if(cn)cn.placeholder=currentLang==='ar'?'اسمك هنا...':'Your name...';
+  if(cm)cm.placeholder=currentLang==='ar'?'رسالتك...':'Your message...';
   clearTimeout(tOut);cIdx=0;isDel=false;wIdx=0;typedEl.textContent='';
   type();updateModeText();
 }
 
-/* MODE */
+/* ── MODE ── */
 function toggleMode(){
   document.body.classList.toggle('morning');
   var m=document.body.classList.contains('morning');
   matrixColor=m?'#4da6ff':'#ff8c00';
-  pColorStr=m?'rgba(77,184,255,':'rgba(255,140,0,';
-  /* update cursor color */
-  var path=document.querySelector('#cursor svg path');
-  if(path)path.setAttribute('fill',m?'#4db8ff':'#ff8c00');
+  pColor=m?'rgba(77,184,255,':'rgba(255,140,0,';
+  var svgPath=document.querySelector('#cursor svg path');
+  if(svgPath)svgPath.setAttribute('fill',m?'#4db8ff':'#ff8c00');
   updateModeText();
 }
 function updateModeText(){
@@ -483,14 +575,69 @@ function updateModeText(){
   document.getElementById('modeStatus').textContent=m?T[currentLang].modeM:T[currentLang].modeN;
 }
 
-/* ENTER */
+/* ── TERMINAL ── */
+var terminalOpen=false;
+var tOutput=document.getElementById('terminal-output');
+var tInput=document.getElementById('terminal-input');
+var tPrompt=document.getElementById('terminal-prompt');
+var terminalCmds={
+  help:function(){return['Available commands:','  about    — Who is Olkie?','  skills   — List of skills','  games    — List of games','  social   — Social accounts','  clear    — Clear terminal','  close    — Close terminal','  hello    — Say hi'];},
+  about:function(){return['Olkie — Iraqi Game Developer & Content Creator.','Builds games with Godot, codes in Python, makes content.','Based in Iraq 🇮🇶'];},
+  skills:function(){return['● Godot Engine  85%','● Python        75%','● HTML/CSS      80%','● JavaScript    65%','● Game Design   90%','● UI/UX         70%'];},
+  games:function(){return['1. Alien Fight    → olkie-1.itch.io/alien-fight','2. Cannon vs Ogres→ olkie-1.itch.io/cannon-vs-ogres','3. Pong           → olkie-1.itch.io/pong'];},
+  social:function(){return['Telegram: t.me/Al_irabi','Telegram: t.me/EBIQ7','Twitter:  x.com/_olkie','Discord:  discord.gg/QdvF2tjy6h','YouTube:  youtube.com/@_olkie'];},
+  hello:function(){return['Hello, visitor! Welcome to Olkie World.','Type "help" to see what you can do here.'];},
+  clear:function(){tOutput.innerHTML='';return[];},
+  close:function(){closeTerminal();return[];}
+};
+
+function printLines(lines){
+  lines.forEach(function(l,i){
+    setTimeout(function(){
+      var div=document.createElement('div');div.className='t-line';div.textContent=l;
+      tOutput.appendChild(div);tOutput.scrollTop=tOutput.scrollHeight;
+    },i*60);
+  });
+}
+
+function openTerminal(){
+  document.getElementById('terminal').classList.add('open');
+  terminalOpen=true;
+  tOutput.innerHTML='';
+  printLines(['OLKIE WORLD TERMINAL v1.0','Type "help" to get started.','']);
+  setTimeout(function(){tInput.focus();},300);
+}
+function closeTerminal(){
+  document.getElementById('terminal').classList.remove('open');
+  terminalOpen=false;
+}
+tInput.addEventListener('keydown',function(e){
+  if(e.key==='Enter'){
+    var cmd=tInput.value.trim().toLowerCase();
+    if(!cmd)return;
+    var promptDiv=document.createElement('div');promptDiv.className='t-line';
+    promptDiv.textContent='olkie@world:~$ '+cmd;tOutput.appendChild(promptDiv);
+    tInput.value='';
+    if(terminalCmds[cmd]){var r=terminalCmds[cmd]();if(r.length)printLines(r);}
+    else{printLines(['Command not found: '+cmd+'. Type "help".']);}
+    tOutput.scrollTop=tOutput.scrollHeight;
+  }
+});
+
+/* ── ENTER ── */
 function openWorld(){
   var ws=document.getElementById('welcome-screen');
   ws.classList.add('hiding');
-  setTimeout(function(){ws.style.display='none';document.getElementById('main-content').classList.add('visible');document.getElementById('controls').style.display='flex';initCounter();},900);
+  setTimeout(function(){
+    ws.style.display='none';
+    document.getElementById('main-content').classList.add('visible');
+    document.getElementById('controls').style.display='flex';
+    initCounter();
+    AOS.refresh();
+  },900);
 }
 
-/* CARDS */
+/* ── CARDS ── */
 function toggleCard(header){
   var card=header.parentElement,icon=header.querySelector('.toggle-icon');
   document.querySelectorAll('.card').forEach(function(c){if(c!==card){c.classList.remove('active');c.querySelector('.toggle-icon').textContent='+';}});
@@ -498,23 +645,25 @@ function toggleCard(header){
   icon.textContent=active?'×':'+';
 }
 
-/* CONTACT */
-function sendContact(){
-  var name=document.getElementById('contactName').value.trim();
-  var email=document.getElementById('contactEmail').value.trim();
-  var msg=document.getElementById('contactMsg').value.trim();
-  if(!name||!email||!msg){showToast(T[currentLang].toastErr);return;}
-  window.location.href='mailto:your@email.com?subject=رسالة من '+encodeURIComponent(name)+'&body='+encodeURIComponent(msg+'\n\n'+email);
-  showToast(T[currentLang].toastSent);
-  document.getElementById('contactName').value='';document.getElementById('contactEmail').value='';document.getElementById('contactMsg').value='';
+/* ── CONTACT (Formspree) ── */
+function handleForm(e){
+  e.preventDefault();
+  var form=e.target;
+  var data=new FormData(form);
+  fetch(form.action,{method:'POST',body:data,headers:{'Accept':'application/json'}})
+    .then(function(r){
+      if(r.ok){showToast(T[currentLang].toastSent);form.reset();}
+      else{showToast('Error sending. Try again.');}
+    })
+    .catch(function(){showToast('Network error.');});
 }
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2800);}
 
-/* MATRIX */
+/* ── MATRIX ── */
 var mc=document.getElementById('matrix-canvas'),mctx=mc.getContext('2d');
 var matrixColor='#ff8c00',mChars='OLKIE01',mSize=13,mDrops=[];
 function resizeMC(){mc.width=window.innerWidth;mc.height=window.innerHeight;mDrops=[];for(var i=0;i<Math.floor(mc.width/mSize);i++)mDrops.push(Math.random()*-80);}
-function drawMatrix(){mctx.fillStyle='rgba(0,0,0,0.06)';mctx.fillRect(0,0,mc.width,mc.height);mctx.fillStyle=matrixColor;mctx.font=mSize+'px monospace';for(var i=0;i<mDrops.length;i++){mctx.fillText(mChars.charAt(Math.floor(Math.random()*mChars.length)),i*mSize,mDrops[i]*mSize);if(mDrops[i]*mSize>mc.height&&Math.random()>0.975)mDrops[i]=0;mDrops[i]++;}}
+function drawMatrix(){mctx.fillStyle='rgba(0,0,0,0.06)';mctx.fillRect(0,0,mc.width,mc.height);mctx.fillStyle=matrixColor;mctx.font=mSize+'px monospace';for(var i=0;i<mDrops.length;i++){mctx.fillText(mChars.charAt(Math.floor(Math.random()*mChars.length)),i*mSize,mDrops[i]*mSize);if(mDrops[i]*mSize>mc.height&&Math.random()>.975)mDrops[i]=0;mDrops[i]++;}}
 resizeMC();
 window.addEventListener('resize',function(){resizeMC();resizePC();});
 setInterval(drawMatrix,40);
