@@ -1,0 +1,84 @@
+/**
+ * CSS Variables Configuration
+ * Centralized color and design tokens for easy maintenance
+ */
+
+:root {
+    /* ── DARK MODE (DEFAULT) ── */
+    
+    /* Colors */
+    --neon: #ff8c00;
+    --neon2: #ff4500;
+    --neon3: #ffb347;
+    
+    /* Glows */
+    --glow: rgba(255, 140, 0, 0.3);
+    --glow-s: rgba(255, 140, 0, 0.55);
+    
+    /* Backgrounds */
+    --bg: #040404;
+    --surface: rgba(14, 14, 14, 0.94);
+    --surface2: rgba(22, 22, 22, 0.9);
+    
+    /* Borders */
+    --border: rgba(255, 140, 0, 0.15);
+    --border-h: rgba(255, 140, 0, 0.5);
+    
+    /* Text */
+    --text: #ede8e0;
+    --text-dim: #6a6560;
+    --text-mid: #a09890;
+    
+    /* Fonts */
+    --font-ar: 'Cairo', sans-serif;
+    --font-en: 'Orbitron', monospace;
+    
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 52px;
+    
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+    
+    /* Transitions */
+    --transition-fast: 0.2s;
+    --transition-normal: 0.3s;
+    --transition-slow: 0.5s;
+    --transition-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/**
+ * LIGHT MODE (Morning Theme)
+ */
+body.morning {
+    --bg: #080f1a;
+    --surface: rgba(10, 20, 36, 0.94);
+    --surface2: rgba(14, 26, 46, 0.9);
+    
+    --border: rgba(100, 180, 255, 0.2);
+    --border-h: rgba(100, 180, 255, 0.55);
+    
+    --text: #d8eeff;
+    --text-dim: #3a5a7a;
+    --text-mid: #7aaabb;
+    
+    --neon: #4db8ff;
+    --neon2: #0077cc;
+    --neon3: #80ccff;
+    
+    --glow: rgba(77, 184, 255, 0.3);
+    --glow-s: rgba(77, 184, 255, 0.55);
+}
+
+/**
+ * RTL Support for Arabic
+ */
+html[dir="rtl"] {
+    --font-ar: 'Cairo', sans-serif;
+}

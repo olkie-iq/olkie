@@ -1,0 +1,195 @@
+/**
+ * Base Styles
+ * Global styles, resets, and foundational elements
+ */
+
+/* ── RESET ── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ── HTML & BODY ── */
+html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    min-height: 100vh;
+    font-family: var(--font-ar);
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    transition: background var(--transition-slow), color var(--transition-slow);
+    cursor: none;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 140, 0, 0.22);
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 140, 0, 0.4);
+}
+
+/* ── CURSOR CUSTOM ── */
+#cursor {
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999;
+    width: 20px;
+    height: 24px;
+    filter: drop-shadow(0 0 5px var(--neon));
+    transition: filter var(--transition-normal);
+}
+
+#cursor svg path {
+    fill: var(--neon);
+}
+
+#cursor-ring {
+    position: fixed;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--neon);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%, -50%);
+    opacity: 0.18;
+    transition: width var(--transition-fast), height var(--transition-fast), opacity var(--transition-normal);
+}
+
+/* ── BACKGROUND EFFECTS ── */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.5;
+}
+
+.grid-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: 
+        linear-gradient(rgba(255, 140, 0, 0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 140, 0, 0.022) 1px, transparent 1px);
+    background-size: 50px 50px;
+}
+
+body.morning .grid-bg {
+    background-image: 
+        linear-gradient(rgba(77, 184, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(77, 184, 255, 0.035) 1px, transparent 1px);
+}
+
+#matrix-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.09;
+    pointer-events: none;
+}
+
+#particles-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.55;
+}
+
+/* ── TOAST NOTIFICATION ── */
+.toast {
+    position: fixed;
+    bottom: 88px;
+    left: 50%;
+    transform: translateX(-50%) translateY(18px);
+    background: var(--surface);
+    border: 1px solid var(--neon);
+    color: var(--neon);
+    font-family: 'Orbitron', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    padding: 9px 22px;
+    z-index: 9000;
+    opacity: 0;
+    transition: opacity var(--transition-normal), transform var(--transition-normal);
+    pointer-events: none;
+    clip-path: polygon(10px 0%, calc(100% - 10px) 0%, 100% 50%, calc(100% - 10px) 100%, 10px 100%, 0% 50%);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ── FORM ELEMENTS ── */
+input,
+textarea,
+button,
+select {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
+input:focus,
+textarea:focus,
+button:focus,
+select:focus {
+    outline: none;
+}
+
+/* ── LINKS ── */
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--transition-normal);
+}
+
+a:hover {
+    color: var(--neon);
+}
+
+/* ── HEADINGS ── */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+/* ── PARAGRAPHS ── */
+p {
+    line-height: 1.6;
+}
+
+/* ── SELECTION ── */
+::selection {
+    background-color: var(--neon);
+    color: #000;
+}
+
+::-moz-selection {
+    background-color: var(--neon);
+    color: #000;
+}
